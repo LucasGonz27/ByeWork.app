@@ -1,0 +1,19 @@
+{
+  "name": "jobboard-back",
+  "version": "1.0.0",
+  "description": "Backend du Job Board en Node.js + Express",
+  "main": "server.js",
+  "scripts": {
+    "start": "nodemon server.js",
+    "dev": "nodemon server.js"
+  },
+  "author": "Lucas Gonzalez",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  }
+}
