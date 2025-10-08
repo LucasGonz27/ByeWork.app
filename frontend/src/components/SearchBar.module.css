@@ -25,3 +25,19 @@
     color: #666;
 }
 
+.searchBar button {
+    background-color: #000;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.searchBar button:hover {
+    background-color: #333;
+}
