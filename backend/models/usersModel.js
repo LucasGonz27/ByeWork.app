@@ -15,6 +15,18 @@ class Utilisateur {
         }
     }
 
+    static async connexionUser(email, mdp) {
+        try {
+            const [rows] = await db.query(
+                'SELECT * FROM users WHERE email = ? AND mdp = ? AND role = "user"', [email, mdp]
+            );
+            return rows[0];
+        } catch (err) {
+            throw err;
+        }
+    }
+
+
     // Récupérer tous les utilisateurs
     static async getAll() {
         try {
