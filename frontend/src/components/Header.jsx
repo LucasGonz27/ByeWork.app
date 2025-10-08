@@ -12,11 +12,13 @@ function Header() {
 
             {/* Conteneur pour les liens à droite */}
             <div className={styles.navLinks}>
-                <Link to="/">Accueil</Link>
-                <Link to="/offers">Offres</Link>
+                <Link to="/offers">Trouver un job</Link>
+                <span className={styles.separator}>|</span>
                 <Link to="#">Trouver une entreprise</Link>
-                <Link to="/signup">Créer un compte</Link>
-                <Link to="#">Publier une offre</Link>
+                <span className={styles.separator}>|</span>
+                <Link to="/signup">Connexion</Link>
+                <span className={styles.separator}>|</span>
+                <Link to="#">Entreprises / publier une offre</Link>
             </div>
         </nav>
     );

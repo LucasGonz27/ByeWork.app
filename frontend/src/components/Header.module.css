@@ -18,7 +18,7 @@
   text-decoration: none;
   color: #333;
   font-weight: 600;
-  font-size: 13px;
+  font-size: 15px;
   transition: color 0.2s ease;
 }
 
@@ -43,7 +43,9 @@
 }
 
 .logo img {
-  height: 30px;
+  height: 50px;
   width: auto;
   display: block;
 }
+
+

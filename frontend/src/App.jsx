@@ -7,13 +7,17 @@ import Header from './components/Header';
 function App() {
   return (
     <Router>
-      <Header />  {}
+      <Header />
+
+      
 
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/offers" element={<Offers />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
+      
+     
     </Router>
   );
 }

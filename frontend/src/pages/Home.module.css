@@ -1,0 +1,31 @@
+.Home {  
+    background-color: #e9e9e9;
+    min-height: 90vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.TitreSection {
+    text-align: lefts;
+    max-width: 800px;
+    padding: 40px 20px;
+}
+
+.Home h1 {
+    font-family: "Abril Fatface", serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 68px;
+    margin: 0 0 20px 0;
+    color: #000;
+}
+
+.Home p {
+    font-family: "Abril Fatface", serif;
+    font-weight: 900;
+    font-style: normal;
+    font-size: 30px;
+    margin: 0 0 40px 0;
+    color: #000;
+}
