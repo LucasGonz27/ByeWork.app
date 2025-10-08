@@ -8,7 +8,7 @@ class UsersController {
             res.status(200).json({
                 success: true,
                 data: users,
-                count: users.length
+                message: 'Utilisateurs récupérés avec succès'
             });
         } catch (error) {
             res.status(500).json({

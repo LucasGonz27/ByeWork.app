@@ -11,10 +11,10 @@ const offreRoute = require('./api/offre/offreRoute');
 
 
 server.use('/ApiByeWork/utilisateurs', usersRoute);
-server.use('/ApiByeWork/admin', adminRoute);
-server.use('/ApiByeWork/candidature', candidatureRoute);
-server.use('/ApiByeWork/entreprise', entrepriseRoute);
-server.use('/ApiByeWork/offre', offreRoute);
+server.use('/ApiByeWork/admins', adminRoute);
+server.use('/ApiByeWork/candidatures', candidatureRoute);
+server.use('/ApiByeWork/entreprises', entrepriseRoute);
+server.use('/ApiByeWork/offres', offreRoute);
 
 server.listen(port, () => {
     console.log("Serveur en ligne sur le port : " + port)

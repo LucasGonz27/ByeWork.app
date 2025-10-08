@@ -1,8 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const EntrepriseController = require('./entrepriseController');
 
-router.get("/", (req, res) => {
-    res.send("hello entreprise");
-})
+router.get("/", EntrepriseController.GetAllEntreprises);
 
 module.exports = router;

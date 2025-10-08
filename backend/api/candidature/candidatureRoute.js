@@ -1,8 +1,6 @@
 const express = require('express');
 const router = express.Router();
-
-router.get("/", (req, res) => {
-    res.send("hello candidature");
-})
+const CandidatureController = require('./candidatureController');
+router.get("/", CandidatureController.GetAllCandidatures);
 
 module.exports = router;
