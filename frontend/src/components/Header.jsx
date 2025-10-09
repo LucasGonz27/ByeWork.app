@@ -41,6 +41,18 @@ function Header() {
             {/* Overlay pour fermer le menu */}
             {isMenuOpen && <div className={styles.overlay} onClick={closeMenu}></div>}
 
+            {/* Bouton de fermeture (croix) qui renvoie à l'accueil */}
+            {isMenuOpen && (
+                <Link
+                    to="/"
+                    className={styles.closeButton}
+                    onClick={closeMenu}
+                    aria-label="Fermer le menu et revenir à l'accueil"
+                >
+                    <span>×</span>
+                </Link>
+            )}
+
             {/* Conteneur pour les liens à droite */}
             <div className={`${styles.navLinks} ${isMenuOpen ? styles.mobileMenu : ''}`}>
                 <Link to="/offers" onClick={closeMenu}>Trouver un job</Link>
