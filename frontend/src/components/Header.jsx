@@ -39,7 +39,7 @@ function Header() {
 
             {/* Conteneur pour les liens à droite */}
             <div className={`${styles.navLinks} ${isMenuOpen ? styles.mobileMenu : ''}`}>
-                <Link to="/offers" onClick={closeMenu}>Trouver un job</Link>
+                <Link to="/SearchOffers" onClick={closeMenu}>Trouver un job</Link>
                 <span className={styles.separator}>|</span>
                 <Link to="#" onClick={closeMenu}>Trouver une entreprise</Link>
                 <span className={styles.separator}>|</span>
