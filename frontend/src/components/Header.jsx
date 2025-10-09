@@ -14,22 +14,6 @@ function Header() {
         setIsMenuOpen(false);
     };
 
-    // Fermer le menu avec la touche Escape
-    useEffect(() => {
-        const handleEscape = (event) => {
-            if (event.key === 'Escape') {
-                closeMenu();
-            }
-        };
-
-        if (isMenuOpen) {
-            document.addEventListener('keydown', handleEscape);
-        }
-
-        return () => {
-            document.removeEventListener('keydown', handleEscape);
-        };
-    }, [isMenuOpen]);
 
     return (
         <nav className={styles.header}>
@@ -59,7 +43,9 @@ function Header() {
                 <span className={styles.separator}>|</span>
                 <Link to="#" onClick={closeMenu}>Trouver une entreprise</Link>
                 <span className={styles.separator}>|</span>
-                <Link to="/signup" onClick={closeMenu}>Connexion</Link>
+                <div className={styles.Connexion}>
+                    <Link to="/signup" onClick={closeMenu}>Connexion</Link>
+                </div>
                 <span className={styles.separator}>|</span>
                 <Link to="#" onClick={closeMenu}>Entreprises / publier une offre</Link>
             </div>

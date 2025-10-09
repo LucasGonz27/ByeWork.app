@@ -2,6 +2,12 @@ const express = require('express');
 const port = process.env.PORT ||5000
 
 const server = express();
+const cors = require('cors');
+
+server.use(cors({
+  origin: 'http://localhost:5173'
+}));
+
 
 const usersRoute = require('./api/utilisateurs/usersRoute');
 const adminRoute = require('./api/admin/adminRoute');

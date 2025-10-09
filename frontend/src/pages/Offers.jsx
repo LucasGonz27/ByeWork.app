@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import styles from "./Offers.module.css";
 
 export default function Offres() {
   const [offres, setOffres] = useState([]);
@@ -22,45 +23,15 @@ export default function Offres() {
   }, []);
 
   return (
-    <div style={{ fontFamily: '"Abril Fatface", serif' }}>
-      <h1 style={{ 
-        fontFamily: '"Abril Fatface", serif',
-        fontWeight: 400,
-        fontSize: '2.5rem',
-        textAlign: 'center',
-        marginBottom: '30px'
-      }}>
-        Liste des Offres d'Emploi
-      </h1>
+    <div className={styles.container}>
+      <h1 className={styles.title}>Liste des Offres d'Emploi</h1>
       {offres.length === 0 ? (
-        <p style={{ 
-          fontFamily: '"Abril Fatface", serif',
-          fontWeight: 400,
-          fontSize: '1.2rem',
-          textAlign: 'center',
-          color: '#666'
-        }}>
-          Aucune offre disponible pour le moment.
-        </p>
+        <p className={styles.empty}>Aucune offre disponible pour le moment.</p>
       ) : (
-        <ul style={{ listStyle: 'none', padding: 0 }}>
+        <ul className={styles.list}>
           {offres.map((offre) => (
-            <li key={offre.idOffre} style={{ 
-              marginBottom: '30px',
-              padding: '20px',
-              border: '1px solid #ddd',
-              borderRadius: '8px',
-              backgroundColor: '#f9f9f9'
-            }}>
-              <h2 style={{ 
-                fontFamily: '"Abril Fatface", serif',
-                fontWeight: 400,
-                fontSize: '1.8rem',
-                marginBottom: '15px',
-                color: '#333'
-              }}>
-                {offre.titre}
-              </h2>
+            <li key={offre.idOffre} className={styles.item}>
+              <h2 className={styles.itemTitle}>{offre.titre}</h2>
               <p>
                 <strong>Lieu:</strong> {offre.lieu}
               </p>
