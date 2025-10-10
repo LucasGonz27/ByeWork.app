@@ -30,7 +30,7 @@ class Utilisateur {
     // Récupérer tous les utilisateurs
     static async getAll() {
         try {
-            const [rows] = await db.query('SELECT * FROM users');
+            const [rows] = await db.query('SELECT * AS nomEntreprise FROM offre o, entreprise e WHERE o.idEntreprise = e.idEntreprise');
             return rows;
         } catch (err) {
             throw err;

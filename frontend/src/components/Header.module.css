@@ -5,6 +5,8 @@
     padding: 10px 20px;
     background-color: #ffffff;
     border-bottom: 1px solid #ddd;
+    width: 100%;
+    box-sizing: border-box; /* évite tout débordement sur iPhone */
 }
 
 .navLinks {
@@ -54,6 +56,7 @@
   height: 65px;
   width: auto;
   display: block;
+  max-width: 100%;
 }
 
 /* Menu hamburger */
