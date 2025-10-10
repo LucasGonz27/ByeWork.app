@@ -8,7 +8,7 @@ function Home() {
       <div className={styles.TitreSection}>
         <h1>ByeWork, votre futur boss<br />vous dit merci !</h1>
         <p>Des milliers de jobs vous attendent... et aucun ne mord !</p>
-        <SearchBar />
+        <SearchBar redirection="/SearchOffers" />
       </div>
     </div>
   );
