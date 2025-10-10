@@ -29,7 +29,7 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
@@ -163,6 +163,10 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
+  .list {
+    grid-template-columns: 1fr; 
+  }
   .itemFooter {
     flex-direction: column;
     gap: 12px;
@@ -182,6 +186,10 @@
 
 /* Responsive bouton consulter l'offre */
 @media (max-width: 480px) {
+
+  .liste{
+    grid-template-columns: 1fr;
+  }
   .item {
     padding: 12px;
   }
@@ -209,7 +217,7 @@
   }
 }
 
-/* Toujours 1 colonne, on ajuste seulement les espacements */
+
 @media (min-width: 640px) {
   .container { padding: 16px; }
   .list { gap: 14px; }
@@ -223,7 +231,7 @@
 @media (min-width: 1280px) {
   .container {
     padding: 24px;
-    max-width: 1100px; /* cap container on large screens */
+    max-width: 1100px; 
     margin-left: auto;
     margin-right: auto;
   }

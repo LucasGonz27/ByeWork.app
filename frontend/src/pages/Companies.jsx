@@ -28,7 +28,7 @@ export default function Companies() {
     return (
         <> 
         <div className={styles.container}>
-            <h1 className={styles.title}>Trouve ta futur Entreprise</h1>        
+            <h1 className={styles.title}>Trouve ta futur entreprise</h1>        
             <div className={styles.searchBar}>
                 <SearchBar />
             </div>
@@ -48,7 +48,7 @@ export default function Companies() {
                                 <div className={styles.tags}>
                                     <span className={styles.tag}>
                                         <MapPin className={styles.icon} />
-                                        {entreprise.lieu}
+                                        {entreprise.adr_ville}
                                     </span>
                                     <span className={styles.tag}>
                                         <Briefcase className={styles.icon} />
