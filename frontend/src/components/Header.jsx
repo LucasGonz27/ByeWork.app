@@ -41,7 +41,7 @@ function Header() {
             <div className={`${styles.navLinks} ${isMenuOpen ? styles.mobileMenu : ''}`}>
                 <Link to="/SearchOffers" onClick={closeMenu}>Trouver un job</Link>
                 <span className={styles.separator}>|</span>
-                <Link to="#" onClick={closeMenu}>Trouver une entreprise</Link>
+                <Link to="/SearchCompanies" onClick={closeMenu}>Trouver une entreprise</Link>
                 <span className={styles.separator}>|</span>
                 <div className={styles.Connexion}>
                     <Link to="/signup" onClick={closeMenu}>Connexion</Link>
