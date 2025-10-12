@@ -11,6 +11,7 @@ class Entreprise {
             throw err;
         }
     }
+
 }
 
 module.exports = Entreprise;

@@ -54,7 +54,6 @@ export default function Offres() {
           const fieldsToSearch = [
             offre.titre,
             offre.nomEntreprise,
-            offre.description,
             offre.lieu,
             offre.domaineActivite,
             offre.type_contrat,

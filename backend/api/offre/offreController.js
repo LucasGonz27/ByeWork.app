@@ -8,6 +8,7 @@ class OffreController {
             res.status(200).json({
                 success: true,
                 data: offres,
+                count : offres.length,
                 message: 'Offres récupérées avec succès'
             });
         } catch (error) {

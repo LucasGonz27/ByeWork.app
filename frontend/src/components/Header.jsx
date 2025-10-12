@@ -1,10 +1,13 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 import Logo from '../assets/LogoByeWork.png';
 
 function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const location = useLocation();
+
+    const isLoginPage = location.pathname === '/Login';
 
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -14,6 +17,11 @@ function Header() {
         setIsMenuOpen(false);
     };
 
+
+    // Ne pas afficher le header sur la page de login
+    if (isLoginPage) {
+        return null;
+    }
 
     return (
         <nav className={styles.header}>
@@ -44,7 +52,7 @@ function Header() {
                 <Link to="/SearchCompanies" onClick={closeMenu}>Trouver une entreprise</Link>
                 <span className={styles.separator}>|</span>
                 <div className={styles.Connexion}>
-                    <Link to="/signup" onClick={closeMenu}>Connexion</Link>
+                    <Link to="/Login" onClick={closeMenu}>Connexion</Link>
                 </div>
                 <span className={styles.separator}>|</span>
                 <Link to="#" onClick={closeMenu}>Entreprises / publier une offre</Link>
