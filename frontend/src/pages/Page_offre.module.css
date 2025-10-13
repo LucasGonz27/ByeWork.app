@@ -28,19 +28,9 @@ img {
   object-fit: contain;
 }
 
-.headerRow {
-  display: flex;
-  align-items: left ; 
-}
-
-.companyName { 
-  font-weight: 700; 
-  font-size: 18px; }
-
 .title { 
-  margin: 8px 0 12px 0; 
   font-size: 30px; 
-  font-weight: 800; }
+  font-weight: 600; }
 
 .icon {
   width: 26px;
@@ -71,18 +61,19 @@ img {
 
 .btn { 
   display: flex; 
-  gap: 12px; 
-  margin: 10px 0 6px 0; 
+  gap: 15px; 
+  margin: 25px 0 6px 0; 
 }
 
 .primaryBtn {
-  background: #facc15; 
-  border: 2px solid #eab308;
+  background: #e9e9e9; 
+  border: 2px solid #ffffff;
   border-radius: 8px;
   padding: 8px 14px;
   font-weight: 700;
   cursor: pointer;
 }
+
 .secondaryBtn {
   background: #ffffff;
   border: 2px solid #e2e2f0;
@@ -92,33 +83,47 @@ img {
   cursor: pointer;
 }
 
-.metaRow { display: flex; align-items: center; gap: 12px; margin-top: 8px; color: #64748b; }
-.inlineIcon { width: 1em; height: 1em; vertical-align: -0.15em; margin-right: 4px; opacity: 0.8; }
-.metaItem { display: inline-flex; align-items: center; }
-.spacer { flex: 1; }
-.linkBtn { background: transparent; border: none; color: #0f172a; cursor: pointer; font-weight: 600; }
 
-.card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 14px; padding: 20px; }
-.sectionTitle { margin: 0 0 12px 0; font-size: 20px; font-weight: 800; }
-.detailsList { display: flex; flex-direction: column; gap: 10px; }
-.detailRow { display: flex; align-items: center; gap: 8px; color: #0f172a; }
-.descriptionBlock { margin-top: 6px; color: #334155; line-height: 1.6; }
+.card { 
+  background: #ffffff; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 14px; 
+  padding: 20px; 
+}
 
-.sideTitle { margin: 0 0 12px 0; font-size: 18px; font-weight: 800; }
-.companyBoxHeader { display: flex; align-items: center; gap: 16px; }
-.companyLink { color: #2563eb; text-decoration: none; font-weight: 600; }
-.sideMeta { margin-top: 10px; color: #334155; }
+.sectionTitle { 
+  margin: 0 0 40px 0; 
+  font-size: 25px; 
+  font-weight: 600; 
+}
 
-.sectionHeader { display: flex; align-items: center; gap: 10px; background: #f7f7f7; border: 1px solid #e5e7eb; border-radius: 14px; padding: 14px 18px; }
-.sectionBullet { color: #facc15; font-weight: 900; }
-.sectionHeaderTitle { margin: 0; font-size: 22px; font-weight: 800; }
+.sectionHeaderBar {
+  background: #f1f1f1;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  margin: -20px -20px 20px -20px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sectionTiret {  
+  font-weight: 600; 
+}
 
-.promoCard { background: #fff7e6; border: 1px solid #fcd34d; border-radius: 14px; padding: 16px; }
-.promoImages { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 10px; }
-.promoImg { background: #e5e7eb; height: 70px; border-radius: 8px; }
-.promoTitle { margin: 0 0 6px 0; font-size: 16px; font-weight: 800; }
-.promoText { margin: 0 0 10px 0; color: #334155; }
-.promoActions { display: flex; gap: 8px; }
+.sectionHeaderText { 
+  margin: 0; 
+  font-size: 25px; 
+  font-weight: 600; 
+}
+
+.description{
+  font-size: 15px;
+}
+
+
+
+
 
 @media (max-width: 960px) {
   .grid { grid-template-columns: 1fr; }

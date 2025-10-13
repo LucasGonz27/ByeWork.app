@@ -35,10 +35,10 @@ function PageOffre() {
       <div className={styles.grid}>
         <div className={styles.mainCol}>
           <div className={styles.card}>
-        <div className={styles.headerRow}>
+            <div className={styles.cardTop}></div>
+      
           <img src={assets[`../assets/${offre.image}`]} alt="Image de l'entreprise" />
-          <p className={styles.companyName}>{offre.nomEntreprise}</p>
-        </div>
+   
         <h1 className={styles.title}>{offre.titre}</h1>
          <div className={styles.tags}>
               <span className={styles.tag}>
@@ -71,33 +71,30 @@ function PageOffre() {
             </div>
           </div>
 
+          {/* Informations sur le poste et details */}
           <div className={styles.card}>
-            <h2 className={styles.sectionTitle}>Détails du poste</h2>
+            <div className={styles.sectionHeaderBar}>
+              <span className={styles.sectionTiret}>→</span>
+              <h2 className={styles.sectionHeaderText}>Le poste</h2>
+            </div>
+
             <div className={styles.detailsList}>
-              {offre.lieu && (
-                <div className={styles.detailRow}><MapPin className={styles.inlineIcon} /> {offre.lieu}</div>
-              )}
-              {offre.type_contrat && (
-                <div className={styles.detailRow}><Briefcase className={styles.inlineIcon} /> {offre.type_contrat}</div>
-              )}
-              {(offre.salaire_min || offre.salaire_max) && (
-                <div className={styles.detailRow}><Euro className={styles.inlineIcon} /> {formatNombre(offre.salaire_min)}€ - {formatNombre(offre.salaire_max)}€
-                </div>
-              )}
-              {offre.description && (
-                <div className={styles.descriptionBlock}>{offre.description}</div>
-              )}
+              <h2>Description du poste</h2>
+                 <div className={styles.descriptionBlock}>
+                    {offre.description_poste}
+                 </div>
             </div>
           </div>
         </div>
 
+        {/* Informations sur l'entreprise */}
         <aside className={styles.sideCol}>
           <div className={styles.card}>
             <h3 className={styles.sideTitle}>Entreprise</h3>
             <div className={styles.companyBoxHeader}>
               <img src={assets[`../assets/${offre.image}`]} alt="Logo" />
               <div>
-                <div className={styles.companyName}>{offre.nomEntreprise}</div>
+              
                 {offre.site && (
                   <a className={styles.companyLink} href={offre.site} target="_blank" rel="noreferrer">Voir le site</a>
                 )}
