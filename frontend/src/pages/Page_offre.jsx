@@ -79,18 +79,35 @@ function PageOffre() {
             </div>
 
             <div className={styles.detailsList}>
-              <h2>Description du poste</h2>
-                 <div className={styles.descriptionBlock}>
-                    {offre.description_poste}
-                 </div>
+              {offre.description_poste && (
+                <>
+                  <h2>Description du poste</h2>
+                  <div className={styles.descriptionBlock}>{offre.description_poste}</div>
+                </>
+              )}
+              {offre.mission_offre && (
+                <>
+                  <h2>Vos missions</h2>
+                  <div className={styles.descriptionBlock}>{offre.mission_offre}</div>
+                </>
+              )}
+              {offre.profil_recherch && (
+                <>
+                  <h2>Profil recherché</h2>
+                  <div className={styles.descriptionBlock}>{offre.profil_recherch}</div>
+                </>
+              )}
             </div>
           </div>
-        </div>
+          </div>
 
-        {/* Informations sur l'entreprise */}
+          {/* Informations sur l'entreprise */}
         <aside className={styles.sideCol}>
           <div className={styles.card}>
-            <h3 className={styles.sideTitle}>Entreprise</h3>
+             <div className={styles.sectionHeaderBar}>
+              <span className={styles.sectionTiret}>→</span>
+              <h2 className={styles.sectionHeaderText}>L'entreprise</h2>
+            </div>
             <div className={styles.companyBoxHeader}>
               <img src={assets[`../assets/${offre.image}`]} alt="Logo" />
               <div>
