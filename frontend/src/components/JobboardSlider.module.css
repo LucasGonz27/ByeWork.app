@@ -1,0 +1,213 @@
+.sliderSection {
+    background: #f7f7f7;
+    padding: 56px 40px;
+}
+
+.headerRow {
+    max-width: 1200px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerRow h2 {
+    font-family: "Abril Fatface", serif;
+    font-size: clamp(28px, 3.2vw, 36px);
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.navBtn {
+    background: #111;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.sliderViewport {
+    position: relative;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.sliderTrack {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: calc((100% - 32px) / 3);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+    cursor: grab;
+}
+.noSnap {
+    scroll-snap-type: none;
+    cursor: grabbing;
+}
+
+.sliderTrack::-webkit-scrollbar { height: 8px; }
+.sliderTrack::-webkit-scrollbar-thumb { background: #c5c5c5; }
+
+.card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 16px;
+    scroll-snap-align: start;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.card h3 { font-size: 18px; margin: 10px 0 6px 0; }
+.company { font-size: 14px; color: #111; margin: 0 0 8px 0; }
+.meta { font-size: 13px; color: #4b5563; margin: 0 0 14px 0; }
+.cta { background: #111; color: #fff; border: none; padding: 10px 12px; font-size: 14px; cursor: pointer; }
+
+/* Removed viewport arrows; using only header controls */
+
+@media (max-width: 1200px) {
+    .headerRow, .sliderViewport { max-width: 1100px; }
+}
+
+@media (max-width: 1024px) {
+    .sliderTrack { grid-auto-columns: calc((100% - 16px) / 2); }
+}
+
+@media (max-width: 768px) {
+    .sliderTrack { grid-auto-columns: 92%; gap: 14px; }
+}
+
+@media (max-width: 640px) {
+    .sliderSection { padding: 48px 20px; }
+    .sliderTrack { grid-auto-columns: 90%; gap: 12px; }
+}
+
+@media (max-width: 1200px) {
+    .sliderWrapper { max-width: 1100px; }
+}
+
+@media (max-width: 1024px) {
+    /* 2 cartes visibles sur tablette */
+    .sliderTrack { grid-auto-columns: calc((100% - 16px) / 2); }
+}
+
+@media (max-width: 768px) {
+    /* 1 carte par vue sur phablet */
+    .sliderTrack { grid-auto-columns: 92%; }
+}
+.sliderSection {
+    background: #f7f7f7;
+    padding: 56px 40px;
+}
+
+.headerRow {
+    max-width: 1100px;
+    margin: 0 auto 16px auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerRow h2 {
+    font-family: "Abril Fatface", serif;
+    font-size: clamp(28px, 3.2vw, 36px);
+    margin: 0;
+}
+
+.controls {
+    display: flex;
+    gap: 8px;
+}
+
+.navBtn {
+    background: #111;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.sliderWrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.sliderTrack {
+    display: grid;
+    grid-auto-flow: column;
+    /* 3 cartes visibles sur desktop */
+    grid-auto-columns: calc((100% - 32px) / 3);
+    gap: 16px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-bottom: 8px;
+}
+
+.sliderTrack::-webkit-scrollbar { height: 8px; }
+.sliderTrack::-webkit-scrollbar-thumb { background: #c5c5c5; }
+
+.card {
+    background: #fff;
+    border: 1px solid #e5e5e5;
+    padding: 16px;
+    scroll-snap-align: start;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+}
+
+.cardHeader {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.badge {
+    background: #111827;
+    color: #fff;
+    font-size: 12px;
+    padding: 4px 8px;
+}
+
+.card h3 {
+    font-size: 18px;
+    margin: 10px 0 6px 0;
+}
+
+.company {
+    font-size: 14px;
+    color: #111;
+    margin: 0 0 8px 0;
+}
+
+.meta {
+    font-size: 13px;
+    color: #4b5563;
+    margin: 0 0 14px 0;
+}
+
+.cta {
+    background: #111;
+    color: #fff;
+    border: none;
+    padding: 10px 12px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+@media (max-width: 640px) {
+    .headerRow h2 { font-size: 28px; }
+    /* 1 carte quasi pleine largeur sur mobile (aperçu de la suivante) */
+    .sliderTrack { grid-auto-columns: 90%; gap: 12px; }
+    .sliderSection { padding: 48px 20px; }
+}
+
+

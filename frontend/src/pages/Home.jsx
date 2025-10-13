@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './Home.module.css';
 import SearchBar from '../components/SearchBar';
+import Presentation from '../components/Presentation';
+import JobboardSlider from '../components/JobboardSlider';
 
 function Home() {
   return (
@@ -10,6 +12,9 @@ function Home() {
         <p>Des milliers de jobs vous attendent... et aucun ne mord !</p>
         <SearchBar redirection="/SearchOffers" />
       </div>
+      <Presentation />
+      <JobboardSlider />
+
     </div>
   );
 }
