@@ -9,10 +9,20 @@
   body {
     background-color: #e9e9e9;
   }
+
+
+.count{
+  font-family: "Abril Fatface", serif;
+  font-size: 34px;
+  font-weight: 800;
+  font-style: italic;
+  margin-bottom: 50px;
+}
+
 .title {
   font-family: "Abril Fatface", serif;
-  font-weight: 400;
-  font-size: clamp(1.8rem, 2.2vw + 1rem, 2.6rem);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 2.8vw + 1.2rem, 3.2rem);
   text-align: center;
   margin-bottom: 30px;
 }
@@ -20,7 +30,7 @@
 .empty {
   font-family: "Abril Fatface", serif;
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-align: center;
   color: #666;
 }
@@ -29,7 +39,7 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr; 
+  grid-template-columns: 1fr 1fr; 
   gap: 12px;
 }
 
@@ -66,7 +76,7 @@
   border: 2px solid #e2e2f0;
   border-radius: 8px;
   padding: 8px 16px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -87,7 +97,7 @@
 .itemTitle {
   font-family: "Playfair Display", serif;
   font-weight: 400;
-  font-size: clamp(1.1rem, 1vw + 0.8rem, 1.5rem);
+  font-size: clamp(1.3rem, 1.2vw + 1rem, 1.8rem);
   margin-bottom: 12px;
   color: #333;
 }
@@ -107,12 +117,12 @@
   border: 1px solid #e2e2f0;
   border-radius: 7px;
   padding: 6px 10px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .icon {
-  width: 16px;
+  width: 26px;
   height: 16px;
   margin-right: 6px;
   color: #0f172a;
@@ -120,7 +130,7 @@
 }
 
 .compName {
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .compContainer {
@@ -144,11 +154,11 @@
 
 .description p {
   margin: 0;
-  font-size: clamp(0.92rem, 0.6vw + 0.7rem, 1.05rem);
+  font-size: clamp(1.05rem, 0.8vw + 0.85rem, 1.2rem);
 }
 
 .date {
-  font-size: 13px;
+  font-size: 20px;
   color: #64748b;
 }
 
@@ -163,6 +173,9 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
+  .list {
+    grid-template-columns: 1fr; 
+  }
   .itemFooter {
     flex-direction: column;
     gap: 12px;
@@ -182,6 +195,9 @@
 
 /* Responsive bouton consulter l'offre */
 @media (max-width: 480px) {
+  .list {
+    grid-template-columns: 1fr;
+  }
   .item {
     padding: 12px;
   }
@@ -209,7 +225,6 @@
   }
 }
 
-/* Toujours 1 colonne, on ajuste seulement les espacements */
 @media (min-width: 640px) {
   .container { padding: 16px; }
   .list { gap: 14px; }
@@ -223,7 +238,7 @@
 @media (min-width: 1280px) {
   .container {
     padding: 24px;
-    max-width: 1100px; /* cap container on large screens */
+    max-width: 1100px; 
     margin-left: auto;
     margin-right: auto;
   }
@@ -248,14 +263,13 @@
   border-radius: 8px;
   border: 1px solid #f9f9f9;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .filterSelect option{
   font-family: 'Poppins', sans-serif;
 }
 
-/* Responsive grille des filtres */
 @media (max-width: 480px) {
   .filters{
     grid-template-columns: 1fr;

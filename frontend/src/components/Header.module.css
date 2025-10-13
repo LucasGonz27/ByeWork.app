@@ -9,6 +9,11 @@
     box-sizing: border-box; /* évite tout débordement sur iPhone */
 }
 
+/* Classe pour masquer le header */
+.header.hidden {
+    display: none;
+}
+
 .navLinks {
   display: flex;              
   align-items: center;        

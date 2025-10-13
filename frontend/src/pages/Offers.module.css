@@ -11,16 +11,24 @@
   }
 .title {
   font-family: "Abril Fatface", serif;
-  font-weight: 400;
-  font-size: clamp(1.8rem, 2.2vw + 1rem, 2.6rem);
+  font-weight: 800;
+  font-size: clamp(2.2rem, 2.8vw + 1.2rem, 3.2rem);
   text-align: center;
   margin-bottom: 30px;
+}
+
+.count{
+  font-family: "Abril Fatface", serif;
+  font-size: 34px;
+  font-weight: 800;
+  font-style: italic;
+  margin-bottom: 50px;
 }
 
 .empty {
   font-family: "Abril Fatface", serif;
   font-weight: 400;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   text-align: center;
   color: #666;
 }
@@ -66,7 +74,7 @@
   border: 2px solid #e2e2f0;
   border-radius: 8px;
   padding: 8px 16px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -87,7 +95,7 @@
 .itemTitle {
   font-family: "Playfair Display", serif;
   font-weight: 400;
-  font-size: clamp(1.1rem, 1vw + 0.8rem, 1.5rem);
+  font-size: clamp(1.3rem, 1.2vw + 1rem, 1.8rem);
   margin-bottom: 12px;
   color: #333;
 }
@@ -107,12 +115,12 @@
   border: 1px solid #e2e2f0;
   border-radius: 7px;
   padding: 6px 10px;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .icon {
-  width: 16px;
+  width: 26px;
   height: 16px;
   margin-right: 6px;
   color: #0f172a;
@@ -120,7 +128,7 @@
 }
 
 .compName {
-  font-size: 17px;
+  font-size: 19px;
 }
 
 .compContainer {
@@ -144,11 +152,11 @@
 
 .description p {
   margin: 0;
-  font-size: clamp(0.92rem, 0.6vw + 0.7rem, 1.05rem);
+  font-size: clamp(1.05rem, 0.8vw + 0.85rem, 1.2rem);
 }
 
 .date {
-  font-size: 13px;
+  font-size: 15px;
   color: #64748b;
 }
 
@@ -256,7 +264,7 @@
   border-radius: 8px;
   border: 1px solid #f9f9f9;
   font-weight: 400;
-  font-size: 15px;
+  font-size: 17px;
 }
 
 .filterSelect option{
@@ -286,6 +294,57 @@
 @media (min-width: 1024px) and (max-width: 1279px) {
   .filters{
     grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+
+
+
+
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive pour les suggestions */
+@media (max-width: 768px) {
+  .suggestion {
+    font-size: 1rem;
+    margin: 15px 0 12px 0;
+  }
+  
+  .suggestionList {
+    margin: 0 10px;
+    border-radius: 8px;
+  }
+  
+  .suggestionList li {
+    padding: 14px 16px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .suggestion {
+    font-size: 0.95rem;
+    margin: 12px 0 10px 0;
+  }
+  
+  .suggestionList li {
+    padding: 12px 14px;
+    font-size: 0.9rem;
+  }
+  
+  .suggestionList li::before {
+    font-size: 1rem;
+    margin-right: 8px;
   }
 }
 
