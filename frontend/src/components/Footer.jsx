@@ -84,5 +84,3 @@ function Footer() {
         </FlowbiteFooter>
     );
 }
-
-export default Footer;
