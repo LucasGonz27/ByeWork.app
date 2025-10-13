@@ -1,0 +1,262 @@
+.loginContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.loginCard {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 32px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid #e2e8f0;
+}
+
+.logoSection {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.logo {
+    width: 90px;
+    height: 90px;
+    margin-bottom: 12px;
+}
+
+.title {
+    font-family: "Abril Fatface", serif;
+    font-size: 32px;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    font-weight: 400;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 16px;
+    margin: 0;
+    font-weight: 400;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+    margin: 0;
+}
+
+.inputWrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 16px;
+    color: #64748b;
+    font-size: 18px;
+    z-index: 1;
+}
+
+.input {
+    width: 100%;
+    padding: 14px 14px 14px 48px;
+    border: 2px solid #e2e8f0;
+    border-radius: 5px;
+    font-size: 16px;
+    color: #0f172a;
+    background: #ffffff;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    box-sizing: border-box;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.1);
+}
+
+.input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.eyeButton {
+    position: absolute;
+    right: 16px;
+    background: none;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 18px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s ease;
+}
+
+.eyeButton:hover {
+    color: #0f172a;
+}
+
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 8px 0;
+}
+
+.checkboxWrapper {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+}
+
+.checkbox {
+    width: 16px;
+    height: 16px;
+    accent-color: #0f172a;
+    cursor: pointer;
+}
+
+.checkboxLabel {
+    font-size: 14px;
+    color: #64748b;
+    cursor: pointer;
+    user-select: none;
+}
+
+.forgotPassword {
+    font-size: 14px;
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.forgotPassword:hover {
+    color: #475569;
+    text-decoration: underline;
+}
+
+.submitButton {
+    background: #0f172a;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif;
+    margin-top: 4px;
+}
+
+.submitButton:hover {
+    background: #1e293b;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(15, 23, 42, 0.2);
+}
+
+.submitButton:active {
+    transform: translateY(0);
+}
+
+.signupSection {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.signupText {
+    font-size: 14px;
+    color: #64748b;
+    margin: 0;
+}
+
+.signupLink {
+    color: #0f172a;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s ease;
+}
+
+.signupLink:hover {
+    color: #475569;
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .loginContainer {
+        padding: 16px;
+    }
+    
+    .loginCard {
+        padding: 32px 24px;
+        max-width: 100%;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+    
+    .logo {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loginCard {
+        padding: 24px 20px;
+    }
+    
+    .title {
+        font-size: 24px;
+    }
+    
+    .input {
+        padding: 14px 14px 14px 44px;
+        font-size: 15px;
+    }
+    
+    .inputIcon {
+        font-size: 16px;
+        left: 14px;
+    }
+    
+    .eyeButton {
+        right: 14px;
+        font-size: 16px;
+    }
+    
+    .submitButton {
+        padding: 14px;
+        font-size: 15px;
+    }
+}

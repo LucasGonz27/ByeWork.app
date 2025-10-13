@@ -1,4 +1,5 @@
 import { Footer as FlowbiteFooter, FooterLink } from "flowbite-react";
+import { useLocation } from "react-router-dom";
 import styles from "./Footer.module.css";
 import Logo from "../assets/LogoByeWork.png";
 import {
@@ -16,6 +17,12 @@ import {
 } from "react-icons/fa";
 
 function Footer() {
+    const location = useLocation();
+    // Ne pas afficher le footer sur la page de login
+    if (location.pathname === '/Login') {
+        return null;
+    }
+
     return (
         <FlowbiteFooter container className={styles.Footer}>
             <div className={styles.footerContent}>
