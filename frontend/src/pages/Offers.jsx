@@ -5,6 +5,8 @@ import CompanyIcon from "../assets/corporate-icon.svg";
 import { Calendar, FileText, MapPin, Briefcase, Euro } from "lucide-react";
 import { formatNombre } from "../utils/formatNombre";
 
+const OFFRES_PAR_PAGE = 8;
+
 export default function Offres() {
   const [offres, setOffres] = useState([]);
   const [filteredOffres, setFilteredOffres] = useState([]);
@@ -18,8 +20,7 @@ export default function Offres() {
   const [salaireMax, setSalaireMax] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [nbOffres, setNbOffres] = useState(0);
-
-
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchOffres = async () => {
@@ -41,35 +42,30 @@ export default function Offres() {
     fetchOffres();
   }, []);
 
-
   useEffect(() => {
     let filtreOffre = offres;
-    
-      if (searchTerm) {
-        // Supprimer les accents de la recherche
-        const searchLower = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-        filtreOffre = filtreOffre.filter((offre) => {
-      
-          // Liste des champs à vérifier pour la recherche
-          const fieldsToSearch = [
-            offre.titre,
-            offre.nomEntreprise,
-            offre.lieu,
-            offre.domaineActivite,
-            offre.type_contrat,
-            offre.niveau_etude,
-            offre.experience_requise,
-            offre.tags,
-            offre.salaire_min?.toString(),
-            offre.salaire_max?.toString(),
-            offre.date_publi
-          ];
-          
-          return fieldsToSearch.some(field => 
-            field && field.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchLower)
-          );
-        });
-      }
+
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      filtreOffre = filtreOffre.filter((offre) => {
+        const fieldsToSearch = [
+          offre.titre,
+          offre.nomEntreprise,
+          offre.lieu,
+          offre.domaineActivite,
+          offre.type_contrat,
+          offre.niveau_etude,
+          offre.experience_requise,
+          offre.tags,
+          offre.salaire_min?.toString(),
+          offre.salaire_max?.toString(),
+          offre.date_publi
+        ];
+        return fieldsToSearch.some(field =>
+          field && field.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchLower)
+        );
+      });
+    }
 
     if (typeContrat)
       filtreOffre = filtreOffre.filter(
@@ -117,8 +113,8 @@ export default function Offres() {
       }
     }
 
-    //filtre pour la recherche 
     setFilteredOffres(filtreOffre);
+    setPage(1); 
   }, [
     typeContrat,
     lieu,
@@ -131,6 +127,12 @@ export default function Offres() {
     searchTerm,
     offres,
   ]);
+
+  const totalPages = Math.ceil(filteredOffres.length / OFFRES_PAR_PAGE);
+  const paginatedOffres = filteredOffres.slice(
+    (page - 1) * OFFRES_PAR_PAGE,
+    page * OFFRES_PAR_PAGE
+  );
 
   const typesContrat = Array.from(new Set(offres.map((o) => o.type_contrat)));
   const lieux = Array.from(new Set(offres.map((o) => o.lieu)));
@@ -154,7 +156,7 @@ export default function Offres() {
       <h1 className={styles.title}>Trouve ton futur job</h1>
 
       <div className={styles.searchBar}>
-        <SearchBar 
+        <SearchBar
           onSearch={setSearchTerm}
           placeholder="Rechercher une offre..."
         />
@@ -275,9 +277,8 @@ export default function Offres() {
       </div>
 
       {/* Résultats de recherche */}
-       {filteredOffres.length === 0 && (
+      {filteredOffres.length === 0 && (
         <div>
-      
           <p className={styles.suggestion}>Suggestion de recherche :</p>
           <ul className={styles.suggestionList}>
             <li>Vérifiez l'orthographe des mots-clés.</li>
@@ -288,59 +289,90 @@ export default function Offres() {
       )}
 
       {/* Liste des offres */}
-        <ul className={styles.list}>
-          {filteredOffres.map((offre) => (
-            <li key={offre.idOffre} className={styles.item}>
-              <h2 className={styles.itemTitle}>{offre.titre}</h2>
-              <div className={styles.compContainer}>
-                <img
-                  src={CompanyIcon}
-                  alt="Icône entreprise"
-                  className={styles.compIcon}
-                />
-                <h3 className={styles.compName}>{offre.nomEntreprise}</h3>
-              </div>
-              <div className={styles.tags}>
-                <span className={styles.tag}>
-                  <MapPin className={styles.icon} />
-                  {offre.lieu}
-                </span>
-                <span className={styles.tag}>
-                  <Briefcase className={styles.icon} />
-                  {offre.type_contrat}
-                </span>
-                <span className={styles.tag}>
-                  <Euro className={styles.icon} />
-                  {formatNombre(offre.salaire_min)}€ -{" "}
-                  {formatNombre(offre.salaire_max)}€
-                </span>
+      <ul className={styles.list}>
+        {paginatedOffres.map((offre) => (
+          <li key={offre.idOffre} className={styles.item}>
+            <h2 className={styles.itemTitle}>{offre.titre}</h2>
+            <div className={styles.compContainer}>
+              <img
+                src={CompanyIcon}
+                alt="Icône entreprise"
+                className={styles.compIcon}
+              />
+              <h3 className={styles.compName}>{offre.nomEntreprise}</h3>
+            </div>
+            <div className={styles.tags}>
+              <span className={styles.tag}>
+                <MapPin className={styles.icon} />
+                {offre.lieu}
+              </span>
+              <span className={styles.tag}>
+                <Briefcase className={styles.icon} />
+                {offre.type_contrat}
+              </span>
+              <span className={styles.tag}>
+                <Euro className={styles.icon} />
+                {formatNombre(offre.salaire_min)}€ -{" "}
+                {formatNombre(offre.salaire_max)}€
+              </span>
 
-                {offre.tags &&
-                  offre.tags
-                    .split(",")
-                    .slice(0, 8)
-                    .map((t, i) => (
-                      <span key={i} className={styles.tag}>
-                        {t.trim()}
-                      </span>
-                    ))}
-              </div>
-              <div className={styles.description}>
-                <FileText className={styles.icon} />
-                <p>{offre.description}</p>
-              </div>
-              <div className={styles.itemFooter}>
-                <p className={styles.date}>
-                  <Calendar className={styles.inlineIcon} />{" "}
-                  <strong>{offre.date_publi}</strong>
-                </p>
-                <button className={styles.consultButton}>
+              {offre.tags &&
+                offre.tags
+                  .split(",")
+                  .slice(0, 8)
+                  .map((t, i) => (
+                    <span key={i} className={styles.tag}>
+                      {t.trim()}
+                    </span>
+                  ))}
+            </div>
+            <div className={styles.description}>
+              <FileText className={styles.icon} />
+              <p>{offre.description}</p>
+            </div>
+            <div className={styles.itemFooter}>
+              <p className={styles.date}>
+                <Calendar className={styles.inlineIcon} />{" "}
+                <strong>{offre.date_publi}</strong>
+              </p>
+              <button className={styles.consultButton}>
+                <a href={`/offer/${offre.idOffre}`} className={styles.linkButton}>
                   Consulter l'offre
-                </button>
-              </div>
-            </li>
+                </a>
+              </button>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className={styles.pagination}>
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className={styles.pageButton}
+          >
+            Précédent
+          </button>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i + 1}
+              onClick={() => setPage(i + 1)}
+              className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}
+            >
+              {i + 1}
+            </button>
           ))}
-        </ul>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className={styles.pageButton}
+          >
+            Suivant
+          </button>
+        </div>
+      )}
     </div>
   );
 }

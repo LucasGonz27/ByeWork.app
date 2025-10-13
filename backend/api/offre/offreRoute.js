@@ -4,4 +4,6 @@ const OffreController = require('./offreController');
 
 router.get('/', OffreController.GetAllOffres);
 
+router.get('/id/:id', OffreController.GetOffreById);
+
 module.exports = router;

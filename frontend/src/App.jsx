@@ -5,6 +5,8 @@ import Signup from './pages/Signup';
 import Header from './components/Header';
 import Companies from './pages/Companies';
 import Footer from './components/Footer';
+import PageProduct from './pages/Page_offre';
+import PageCompanie from './pages/Page_companie';
 
 function App() {
   return (
@@ -16,6 +18,8 @@ function App() {
           <Route path="/SearchOffers" element={<Offers />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/SearchCompanies" element={<Companies />} />
+          <Route path="/offer/:id" element={<PageProduct />} />
+          <Route path="/companie/:idEntreprise" element={<PageCompanie />} />
         </Routes>
       </main>
 
