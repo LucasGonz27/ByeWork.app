@@ -9,6 +9,15 @@ class Offre {
             throw err;
         }
     }
+
+    static async getById(id) {
+        try {
+            const [result] = await db.query('SELECT * from view_offres_entreprises WHERE idOffre = ?', [id]);
+            return result[0];
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = Offre;

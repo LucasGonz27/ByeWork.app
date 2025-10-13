@@ -128,7 +128,7 @@
 }
 
 .compName {
-  font-size: 19px;
+  font-size: 22px;
 }
 
 .compContainer {
@@ -346,5 +346,35 @@
     font-size: 1rem;
     margin-right: 8px;
   }
+}
+
+.consultButton a {
+  text-decoration: none;
+  color: inherit;
+  color: black;
+  font-size: 15px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 12px;
+}
+
+.pageButton{
+  background-color: #ffffff;
+  border: #ffffff solid 1px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pageButton:hover {
+  background-color: #f0f0f0;
 }
 
