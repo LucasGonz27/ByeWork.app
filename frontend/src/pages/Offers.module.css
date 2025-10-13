@@ -250,13 +250,14 @@
 
 
 .filters{
-  margin: 16px 0;
-  margin-bottom: 50px;
+  margin: 16px 0 50px 0;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr; 
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
-
-
+  width: 100%;
+  max-width: 960px; 
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .filterSelect{
@@ -264,7 +265,8 @@
   border-radius: 8px;
   border: 1px solid #f9f9f9;
   font-weight: 400;
-  font-size: 17px;
+  font-size: 16px;
+  width: 100%;
 }
 
 .filterSelect option{
@@ -272,29 +274,12 @@
 }
 
 /* Responsive grille des filtres */
-@media (max-width: 480px) {
-  .filters{
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-}
+/* auto-fit grid already adapts; keep a tighter gap on small screens */
+@media (max-width: 480px) { .filters{ gap: 8px; } }
 
-@media (min-width: 481px) and (max-width: 767px) {
-  .filters{
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-@media (min-width: 768px) and (max-width: 1023px) {
-  .filters{
-    grid-template-columns: 1fr 1fr 1fr;
-  }
-}
-
-@media (min-width: 1024px) and (max-width: 1279px) {
-  .filters{
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-  }
+/* Match SearchBar width at breakpoints */
+@media (max-width: 1024px) {
+  .filters { max-width: 820px; }
 }
 
 

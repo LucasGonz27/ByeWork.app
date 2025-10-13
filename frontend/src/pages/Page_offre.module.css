@@ -117,11 +117,17 @@ img {
   font-weight: 600; 
 }
 
-.description{
-  font-size: 15px;
+.detailsList h2{
+  font-size: 22px;
 }
 
-
+.descriptionBlock { 
+  font-size: 18px;
+  color: #000000; 
+  line-height: 1.6; 
+  white-space: pre-line;
+  font-family: 'Arial', sans-serif; 
+}
 
 
 
