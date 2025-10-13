@@ -122,14 +122,35 @@ img {
 }
 
 .descriptionBlock { 
-  font-size: 18px;
+  font-size: 17px;
   color: #000000; 
   line-height: 1.6; 
   white-space: pre-line;
   font-family: 'Arial', sans-serif; 
 }
 
+.date {
+  font-size: 15px;
+  color: #64748b;
+}
 
+
+.companyBoxHeader .tags{
+  margin-top: 25px;
+}
+
+.companyBoxHeader .tags p{
+  font-style: italic;
+}
+
+.companyBoxHeader .tags p a{
+  color: #000;
+}
+
+.QuéstCe p{
+  font-size: 18px;
+  color: #000000;
+}
 
 @media (max-width: 960px) {
   .grid { grid-template-columns: 1fr; }

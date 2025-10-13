@@ -5,7 +5,6 @@ import { Calendar, FileText, MapPin, Briefcase, Euro } from "lucide-react";
 import { formatNombre } from '../utils/formatNombre'; 
 const assets = import.meta.glob('../assets/*', { eager: true, query: '?url', import: 'default' });
 
-
 function PageOffre() {
   const { id } = useParams();
   const [offre, setOffre] = useState(null);
@@ -30,17 +29,21 @@ function PageOffre() {
 
   if (!offre) return <div>Chargement...</div>;
 
+  // Récupération de l'entreprise depuis l'offre
+  const entreprise = offre.entreprise || {};
+
   return (
     <div className={styles.page}>
       <div className={styles.grid}>
         <div className={styles.mainCol}>
           <div className={styles.card}>
             <div className={styles.cardTop}></div>
-      
-          <img src={assets[`../assets/${offre.image}`]} alt="Image de l'entreprise" />
-   
-        <h1 className={styles.title}>{offre.titre}</h1>
-         <div className={styles.tags}>
+            <img
+              src={assets[`../assets/${offre.image}`]}
+              alt={`Image de l'entreprise ${entreprise.nom || ''}`}
+            />
+            <h1 className={styles.title}>{offre.titre}</h1>
+            <div className={styles.tags}>
               <span className={styles.tag}>
                 <MapPin className={styles.icon} />
                 {offre.lieu}
@@ -53,7 +56,6 @@ function PageOffre() {
                 {formatNombre(offre.salaire_min)}€ -{" "}
                 {formatNombre(offre.salaire_max)}€
               </span>
-
               {offre.tags &&
                 offre.tags
                   .split(",")
@@ -64,7 +66,6 @@ function PageOffre() {
                     </span>
                   ))}
             </div>
-
             <div className={styles.btn}>
               <button className={styles.primaryBtn}>Postuler</button>
               <button className={styles.secondaryBtn}>Sauvegarder</button>
@@ -77,7 +78,6 @@ function PageOffre() {
               <span className={styles.sectionTiret}>→</span>
               <h2 className={styles.sectionHeaderText}>Le poste</h2>
             </div>
-
             <div className={styles.detailsList}>
               {offre.description_poste && (
                 <>
@@ -99,25 +99,63 @@ function PageOffre() {
               )}
             </div>
           </div>
-          </div>
+        </div>
 
-          {/* Informations sur l'entreprise */}
+        {/* Informations sur l'entreprise */}
         <aside className={styles.sideCol}>
           <div className={styles.card}>
-             <div className={styles.sectionHeaderBar}>
+            <div className={styles.sectionHeaderBar}>
               <span className={styles.sectionTiret}>→</span>
               <h2 className={styles.sectionHeaderText}>L'entreprise</h2>
             </div>
             <div className={styles.companyBoxHeader}>
-              <img src={assets[`../assets/${offre.image}`]} alt="Logo" />
+
+
+              <img
+                src={assets[`../assets/${offre.image}`]}
+                alt={`Logo de l'entreprise ${entreprise.nom || ''}`}
+              />
               <div>
-              
-                {offre.site && (
-                  <a className={styles.companyLink} href={offre.site} target="_blank" rel="noreferrer">Voir le site</a>
-                )}
+                <div className={styles.tags}>
+                  <span className={styles.tag}>
+                    <MapPin className={styles.icon} />
+                    {offre.adr_ville || ''}
+                  </span>
+
+
+                   <span className={styles.tag}>
+                    <Calendar className={styles.icon} />
+                    {offre.annee_fondation || ''}
+                  </span>
+
+
+                  <span className={styles.tag}>
+                    <Briefcase className={styles.icon} />
+                    {offre.taille ? `Plus de ${formatNombre(offre.taille)} employés` : ''}
+                  </span>
+
+
+                  <span className={styles.tag}>
+                    {offre.chiffre_affaire ? `${formatNombre(offre.chiffre_affaire)} €` : ''}
+                  </span>
+
+                  <p><a href="#">Voir les offres de cette entreprise</a></p>
+
+                  <div className={styles.QuéstCe}>
+                    <h2>Qui sommes-nous ?</h2>
+                    <p>{offre.descriptionEntreprise}</p>
+                  </div>
+
+                   {offre.avantages && (
+                <>
+                  <h2>Vos avantages</h2>
+                  <div className={styles.descriptionBlock}>{offre.avantages}</div>
+                </>
+              )}
+
+                </div>
               </div>
             </div>
-            {offre.lieu && <div className={styles.sideMeta}><MapPin className={styles.inlineIcon} /> {offre.lieu}</div>}
           </div>
         </aside>
       </div>
