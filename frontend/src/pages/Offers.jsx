@@ -335,7 +335,9 @@ export default function Offres() {
                   <strong>{offre.date_publi}</strong>
                 </p>
                 <button className={styles.consultButton}>
-                  Consulter l'offre
+                  <a href={`/offer/${offre.idOffre}`} className={styles.linkButton}>
+                    Consulter l'offre
+                  </a>
                 </button>
               </div>
             </li>

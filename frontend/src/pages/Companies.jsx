@@ -192,7 +192,9 @@ export default function Companies() {
                   <strong>{entreprise.annee_fondation}</strong>
                 </p>
                 <button className={styles.consultButton}>
-                  Consulter l'entreprise
+                  <a href={`/companie/${entreprise.idEntreprise}`} className={styles.link}>
+                    Consulter l'entreprise
+                  </a>
                 </button>
               </div>
             </li>
