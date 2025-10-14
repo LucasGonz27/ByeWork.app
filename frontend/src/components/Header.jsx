@@ -1,5 +1,5 @@
-import { Link, useLocation } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import {Link, useLocation} from 'react-router-dom';
+import {useState, useEffect} from 'react';
 import styles from './Header.module.css';
 import Logo from '../assets/LogoByeWork.png';
 
@@ -7,8 +7,7 @@ function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const location = useLocation();
 
-    const isLoginPage = location.pathname === '/Login';
-
+    const isLoginPage = location.pathname === '/Login' || location.pathname === '/Signup';
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
     };
@@ -27,7 +26,7 @@ function Header() {
         <nav className={styles.header}>
             {/* Logo à gauche */}
             <Link to="/" className={styles.logo}>
-                <img src={Logo} alt="Logo ByeWork" />
+                <img src={Logo} alt="Logo ByeWork"/>
             </Link>
 
             {/* Overlay pour fermer le menu */}

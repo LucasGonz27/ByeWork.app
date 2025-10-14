@@ -100,7 +100,7 @@ function Login() {
                     <div className={styles.signupSection}>
                         <p className={styles.signupText}>
                             Pas encore de compte ?{' '}
-                            <Link to="/signup" className={styles.signupLink}>
+                            <Link to="/Signup" className={styles.signupLink}>
                                 Créer un compte
                             </Link>
                         </p>
