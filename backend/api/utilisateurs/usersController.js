@@ -1,4 +1,8 @@
 const Utilisateur = require('../../models/usersModel');
+const jwt = require('jsonwebtoken');
+
+// Clé secrète pour JWT (en production, utiliser une variable d'environnement)
+const JWT_SECRET = process.env.JWT_SECRET || 'votre_cle_secrete_super_securisee';
 
 class UsersController {
 
@@ -65,9 +69,39 @@ class UsersController {
 
     static async connexionUser(req, res) {
         try {
-            const {email, mdp} = req.body;
+            const {email, mdp, rememberMe} = req.body;
             const user = await Utilisateur.connexion(email, mdp);
+            
             if (user) {
+                // Créer un token JWT
+                const token = jwt.sign(
+                    { 
+                        id: user.idUtilisateur, 
+                        email: user.email, 
+                        role: user.role 
+                    },
+                    JWT_SECRET,
+                    { expiresIn: rememberMe ? '30d' : '24h' }
+                );
+
+                // Définir les options du cookie
+                const cookieOptions = {
+                    httpOnly: true,
+                    secure: process.env.NODE_ENV === 'production',
+                    sameSite: 'lax',
+                    path: '/'
+                };
+
+                // Si "Se souvenir de moi" est coché, cookie de 30 jours, sinon 24h
+                if (rememberMe) {
+                    cookieOptions.maxAge = 30 * 24 * 60 * 60 * 1000; // 30 jours
+                } else {
+                    cookieOptions.maxAge = 24 * 60 * 60 * 1000; // 24 heures
+                }
+
+                // Définir le cookie
+                res.cookie('authToken', token, cookieOptions);
+
                 res.status(200).json({
                     success: true,
                     data: user,
@@ -83,6 +117,65 @@ class UsersController {
             res.status(500).json({
                 success: false,
                 message: 'Erreur lors de la connexion',
+                error: error.message
+            });
+        }
+    }
+
+    // Vérifier la session utilisateur
+    static async verifySession(req, res) {
+        try {
+            const token = req.cookies.authToken;
+            
+            if (!token) {
+                return res.status(401).json({
+                    success: false,
+                    message: 'Aucun token de session'
+                });
+            }
+
+            const decoded = jwt.verify(token, JWT_SECRET);
+            const user = await Utilisateur.getByEmail(decoded.email);
+            
+            if (user) {
+                res.status(200).json({
+                    success: true,
+                    data: user,
+                    message: 'Session valide'
+                });
+            } else {
+                res.status(401).json({
+                    success: false,
+                    message: 'Utilisateur non trouvé'
+                });
+            }
+        } catch (error) {
+            res.status(401).json({
+                success: false,
+                message: 'Token invalide',
+                error: error.message
+            });
+        }
+    }
+
+    // Déconnexion
+    static async logoutUser(req, res) {
+        try {
+            res.clearCookie('authToken', {
+                httpOnly: true,
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'lax',
+                path: '/'
+            });
+            
+            res.status(200).json({
+                success: true,
+                message: 'Déconnexion réussie'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la déconnexion',
                 error: error.message
             });
         }

@@ -3,13 +3,16 @@ const port = process.env.PORT ||5000
 
 const server = express();
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 server.use(cors({
-  origin: 'http://localhost:5173'
+  origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175', 'http://localhost:5176'],
+  credentials: true
 }));
 
-// Middleware pour parser le JSON
+// Middleware pour parser le JSON et les cookies
 server.use(express.json());
+server.use(cookieParser());
 
 
 const usersRoute = require('./api/utilisateurs/usersRoute');

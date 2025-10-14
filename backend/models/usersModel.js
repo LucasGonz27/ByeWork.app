@@ -18,7 +18,7 @@ class Utilisateur {
     static async connexion(email, mdp) {
         try {
             const [rows] = await db.query(
-                'SELECT * FROM users WHERE email = ? AND mdp = ? AND role = "user"', [email, mdp]
+                'SELECT * FROM users WHERE email = ? AND mdp = ?', [email, mdp]
             );
             return rows[0];
         } catch (err) {
@@ -55,7 +55,6 @@ class Utilisateur {
         } catch (err) {
             throw err;
         }
-    
     }
     static async update(id, prenom, nom, email, mdp, telephone, ville, role = "user"){
         try {

@@ -199,6 +199,82 @@
   }
 }
 
+/* Styles pour les informations utilisateur */
+.userInfoLink {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.userInfoLink:hover {
+  transform: translateY(-1px);
+}
+
+.userInfo {
+  color: #333;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.userInfoLink:hover .userInfo {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.userRole {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  text-transform: capitalize;
+}
+
+.logoutButton {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logoutButton:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles mobile pour les éléments utilisateur */
+@media screen and (max-width: 1155px) {
+  .userInfo {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+  
+  .logoutButton {
+    font-size: 18px;
+    padding: 12px 24px;
+    margin: 20px 0;
+    border-radius: 8px;
+  }
+}
+
 
 
 /* Mobile styles */
@@ -237,6 +313,82 @@
   
   .navLinks .separator {
     display: none;
+  }
+}
+
+/* Styles pour les informations utilisateur */
+.userInfoLink {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+}
+
+.userInfoLink:hover {
+  transform: translateY(-1px);
+}
+
+.userInfo {
+  color: #333;
+  font-weight: 600;
+  font-size: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.userInfoLink:hover .userInfo {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.userRole {
+  font-size: 12px;
+  font-weight: 400;
+  color: #666;
+  text-transform: capitalize;
+}
+
+.logoutButton {
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logoutButton:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.logoutButton:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Styles mobile pour les éléments utilisateur */
+@media screen and (max-width: 1155px) {
+  .userInfo {
+    font-size: 24px;
+    margin: 20px 0;
+  }
+  
+  .logoutButton {
+    font-size: 18px;
+    padding: 12px 24px;
+    margin: 20px 0;
+    border-radius: 8px;
   }
 }
 

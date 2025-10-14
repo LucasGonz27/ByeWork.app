@@ -1,0 +1,52 @@
+.profileContainer {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 20px;
+    font-family: 'Poppins', sans-serif;
+}
+
+.profileCard {
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    width: 100%;
+    max-width: 800px;
+    border: 1px solid #e2e8f0;
+}
+
+.title {
+    font-family: "Abril Fatface", serif;
+    font-size: 36px;
+    color: #0f172a;
+    margin: 0 0 8px 0;
+    font-weight: 400;
+    text-align: center;
+}
+
+.subtitle {
+    color: #64748b;
+    font-size: 18px;
+    margin: 0 0 40px 0;
+    font-weight: 400;
+    text-align: center;
+}
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .profileContainer {
+        padding: 16px;
+    }
+    
+    .profileCard {
+        padding: 24px;
+    }
+    
+    .title {
+        font-size: 28px;
+    }
+}

@@ -11,6 +11,10 @@ router.post('/newUser', UsersController.createUser);
 
 router.post('/connexion', UsersController.connexionUser);
 
+router.get('/verify-session', UsersController.verifySession);
+
+router.post('/logout', UsersController.logoutUser);
+
 router.delete('/delete/:id', UsersController.deleteUser);
 
 router.put('/update/:id', UsersController.updateUser);
