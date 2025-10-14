@@ -281,3 +281,27 @@
 @media (max-width: 480px) { .filters{ gap: 8px; } }
 @media (max-width: 1024px) { .filters { max-width: 820px; } }
 
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+  gap: 12px;
+}
+
+.pageButton{
+  background-color: #ffffff;
+  border: #ffffff solid 1px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.pageButton:hover {
+  background-color: #f0f0f0;
+}

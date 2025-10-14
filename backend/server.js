@@ -8,6 +8,9 @@ server.use(cors({
   origin: 'http://localhost:5173'
 }));
 
+// Middleware pour parser le JSON
+server.use(express.json());
+
 
 const usersRoute = require('./api/utilisateurs/usersRoute');
 const adminRoute = require('./api/admin/adminRoute');

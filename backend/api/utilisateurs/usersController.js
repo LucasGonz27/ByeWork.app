@@ -88,6 +88,58 @@ class UsersController {
         }
     }
 
+    static async deleteUser(req, res){
+        try {
+            const id = req.params.id;
+            const result = await Utilisateur.delete(id);
+            if(result){
+                res.status(200).json({
+                    success: true,
+                    data: result,
+                    message: 'Utilisateur supprimé avec succès'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: 'Utilisateur non trouvé'
+                });
+            } 
+
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la suppression de l\'utilisateur',
+                error: error.message
+            });
+        }
+    }
+
+    static async updateUser(req, res){
+        try {
+            const id = req.params.id;
+            const {prenom, nom, email, mdp, telephone, ville, role} = req.body;
+            const user = await Utilisateur.update(id, prenom, nom, email, mdp, telephone, ville, role);
+            if(user){
+                res.status(200).json({
+                    success: true,
+                    data: user,
+                    message: 'Utilisateur mis à jour avec succès'
+                });
+            } else {
+                res.status(404).json({
+                    success: false,
+                    message: 'Utilisateur non trouvé'
+                });
+            }
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la mise à jour de l\'utilisateur',
+                error: error.message
+            });
+        }
+    }
+
 }
 
 module.exports = UsersController;
