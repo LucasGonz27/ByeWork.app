@@ -5,12 +5,15 @@ import CompanyIcon from "../assets/corporate-icon.svg";
 import { Calendar, FileText, MapPin, Briefcase } from "lucide-react";
 import { formatNombre } from "../utils/formatNombre";
 
+const ENTREPRISES_PAR_PAGE = 8;
+
 export default function Companies() {
   const [companies, setCompanies] = useState([]);
   const [ville, setVille] = useState("");
   const [taille, setTaille] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredCompanies, setFilteredCompanies] = useState([]);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     const fetchCompanies = async () => {
@@ -83,7 +86,14 @@ export default function Companies() {
     }
 
     setFilteredCompanies(filtered);
+    setPage(1);
   }, [ville, taille, searchTerm, companies]); 
+
+  const totalPages = Math.ceil(filteredCompanies.length / ENTREPRISES_PAR_PAGE) || 1;
+  const paginatedCompanies = filteredCompanies.slice(
+    (page - 1) * ENTREPRISES_PAR_PAGE,
+    page * ENTREPRISES_PAR_PAGE
+  );
 
   const lieux = Array.from(new Set(companies.map((company) => company.adr_ville)));
   const tailles = [
@@ -154,7 +164,7 @@ export default function Companies() {
 
 
         <ul className={styles.list}>
-          {filteredCompanies.map((entreprise) => (
+          {paginatedCompanies.map((entreprise) => (
             <li key={entreprise.idEntreprise} className={styles.item}>
               <h2 className={styles.itemTitle}>{entreprise.nom}</h2>
 
@@ -200,7 +210,33 @@ export default function Companies() {
             </li>
           ))}
         </ul>
-
+        {totalPages > 1 && (
+          <div className={styles.pagination}>
+            <button
+              onClick={() => setPage((p) => Math.max(1, p - 1))}
+              disabled={page === 1}
+              className={styles.pageButton}
+            >
+              Précédent
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                onClick={() => setPage(i + 1)}
+                className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+              disabled={page === totalPages}
+              className={styles.pageButton}
+            >
+              Suivant
+            </button>
+          </div>
+        )}
     </div>
   );
 }
