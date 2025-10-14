@@ -15,7 +15,7 @@ class Utilisateur {
         }
     }
 
-    static async connexionUser(email, mdp) {
+    static async connexion(email, mdp) {
         try {
             const [rows] = await db.query(
                 'SELECT * FROM users WHERE email = ? AND mdp = ? AND role = "user"', [email, mdp]
@@ -30,7 +30,7 @@ class Utilisateur {
     // Récupérer tous les utilisateurs
     static async getAll() {
         try {
-            const [rows] = await db.query('SELECT * AS nomEntreprise FROM offre o, entreprise e WHERE o.idEntreprise = e.idEntreprise');
+            const [rows] = await db.query('SELECT * FROM users');
             return rows;
         } catch (err) {
             throw err;
@@ -48,5 +48,6 @@ class Utilisateur {
     }
 
 }
+
 
 module.exports = Utilisateur;
