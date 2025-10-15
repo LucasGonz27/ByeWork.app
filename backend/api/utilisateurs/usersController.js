@@ -51,8 +51,8 @@ class UsersController {
 
     static async createUser(req, res) {
         try {
-            const {prenom,nom,email,mdp,telephone,ville,role} = req.body;
-            const newUser = await Utilisateur.create(prenom, nom, email, mdp, telephone, ville, role);
+            const {prenom,nom,email,mdp,telephone,ville,role,idEntreprise} = req.body;
+            const newUser = await Utilisateur.create(prenom, nom, email, mdp, telephone, ville, role, idEntreprise);
             res.status(201).json({
                 success: true,
                 data: newUser,

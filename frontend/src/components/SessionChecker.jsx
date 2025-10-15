@@ -10,6 +10,15 @@ const SessionChecker = ({ children }) => {
         const checkSessionOnLoad = async () => {
             // Pages publiques qui ne nécessitent pas d'authentification
             const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/SearchCompanies'];
+
+            const pageRecruteur = ["/publier-offre"];
+
+            if (pageRecruteur.includes(location.pathname)) {
+                if (localStorage.getItem('role') !== 'recruteur' && localStorage.getItem('role') !== 'admin') {
+                    navigate('/login');
+                    return;
+                }
+            }
             
             // Si on est sur une page publique, ne pas vérifier la session
             if (publicPages.includes(location.pathname)) {

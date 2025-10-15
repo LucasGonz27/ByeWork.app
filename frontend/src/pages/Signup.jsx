@@ -1,8 +1,8 @@
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import styles from './Login.module.css';
 import Logo from '../assets/LogoByeWork.png';
-import {FiMail, FiLock, FiEye, FiEyeOff, FiUser, FiPhone, FiMapPin} from 'react-icons/fi';
+import {FiMail, FiLock, FiEye, FiEyeOff, FiUser} from 'react-icons/fi';
 import { useNotificationContext } from '../contexts/NotificationContext';
 import { setUser } from '../utils/auth';
 
@@ -12,17 +12,57 @@ function Signup() {
     const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [isRecruiter, setIsRecruiter] = useState(false);
+    const [companies, setCompanies] = useState([]);
+    const [selectedCompany, setSelectedCompany] = useState('');
     const [formData, setFormData] = useState({
         prenom: '',
         email: '',
         password: ''
     });
 
+    // Charger la liste des entreprises si recruteur coché
+    useEffect(() => {
+        const fetchCompanies = async () => {
+            try {
+                if (isRecruiter) {
+                    const url = "http://localhost:5000/ApiByeWork/entreprises";
+                    const fetcher = await fetch(url);
+                    const json = await fetcher.json();
+                if (json.success) {
+                    setCompanies(json.data);
+                }
+                }
+            } catch (err) {
+                console.error('Erreur lors du chargement des entreprises:', err);
+                showError('Erreur lors du chargement des entreprises. Veuillez réessayer plus tard.');
+            }
+        };
+
+        if (isRecruiter) {
+            fetchCompanies();
+        } else {
+            setCompanies([]);
+            setSelectedCompany('');
+        }
+    }, [isRecruiter]);
+
     const handleInputChange = (e) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
         });
+    };
+
+    const handleRecruiterChange = (e) => {
+        setIsRecruiter(e.target.checked);
+        if (!e.target.checked) {
+            setSelectedCompany('');
+        }
+    };
+
+    const handleCompanyChange = (e) => {
+        setSelectedCompany(e.target.value);
     };
 
     const handleSubmit = async (e) => {
@@ -44,7 +84,8 @@ function Signup() {
                     mdp: formData.password,
                     telephone: '', // Champ vide car non requis
                     ville: '', // Champ vide car non requis
-                    role: 'user'
+                    role: isRecruiter ? 'recruteur' : 'user',
+                    idEntreprise: isRecruiter ? selectedCompany : undefined
                 })
             });
 
@@ -69,22 +110,14 @@ function Signup() {
                     const loginData = await loginResponse.json();
 
                     if (loginData.success) {
-                        // Stocker les informations utilisateur
                         setUser(loginData.data);
-                        
-                        // Afficher une notification de succès
                         showSuccess(`Compte créé avec succès ! Bienvenue ${formData.prenom} !`);
-                        
-                        // Rediriger vers la page d'accueil
                         navigate('/');
                     } else {
-                        // Si la connexion automatique échoue, rediriger vers login
                         showSuccess(`Compte créé avec succès ! Veuillez vous connecter.`);
                         navigate('/login');
                     }
                 } catch (loginError) {
-                    console.error('Erreur lors de la connexion automatique:', loginError);
-                    // En cas d'erreur, rediriger vers login
                     showSuccess(`Compte créé avec succès ! Veuillez vous connecter.`);
                     navigate('/login');
                 }
@@ -92,7 +125,6 @@ function Signup() {
                 setError(data.message || 'Erreur lors de la création du compte');
             }
         } catch (error) {
-            console.error('Erreur:', error);
             if (error.name === 'TypeError' && error.message.includes('fetch')) {
                 setError('Impossible de se connecter au serveur. Vérifiez que le serveur backend est démarré.');
             } else {
@@ -177,6 +209,7 @@ function Signup() {
                                 className={styles.input}
                                 required
                             />
+                        
                             <button
                                 type="button"
                                 onClick={togglePasswordVisibility}
@@ -185,12 +218,43 @@ function Signup() {
                                 {showPassword ? <FiEyeOff/> : <FiEye/>}
                             </button>
                         </div>
+                        <div className={styles.recru}>
+                            Je suis un recruteur 
+                            <input 
+                                type="checkbox" 
+                                name="recruteur" 
+                                checked={isRecruiter}
+                                onChange={handleRecruiterChange}
+                            />
+                        </div>
+                        {isRecruiter && (
+                            <div className={styles.inputGroup} style={{marginTop: 10}}>
+                                <label htmlFor="entreprise" className={styles.label}>
+                                    Sélectionnez votre entreprise
+                                </label>
+                                <select
+                                    id="entreprise"
+                                    name="entreprise"
+                                    value={selectedCompany}
+                                    onChange={handleCompanyChange}
+                                    className={styles.input}
+                                    required
+                                >
+                                    <option value="">-- Choisissez une entreprise --</option>
+                                    {companies.map((company) => (
+                                        <option key={company.idEntreprise} value={company.idEntreprise}>
+                                            {company.nom}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+                        )}
                     </div>
 
                     <button 
                         type="submit" 
                         className={styles.submitButton}
-                        disabled={loading}
+                        disabled={loading || (isRecruiter && !selectedCompany)}
                     >
                         {loading ? 'Création du compte...' : 'S\'inscrire'}
                     </button>

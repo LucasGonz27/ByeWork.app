@@ -3,11 +3,11 @@ const db = require('../config/db');
 class Utilisateur {
 
     // Créer un nouvel utilisateur
-    static async create(prenom, nom, email, mdp, telephone, ville, role = "user") {
+    static async create(prenom, nom, email, mdp, telephone, ville, role , idEntreprise) {
         try {
             const [rows] = await db.query(
-                'INSERT INTO users (prenom, nom, email, mdp, telephone, ville, role) VALUES (?, ?, ?, ?, ?, ?, ?)',
-                [prenom, nom, email, mdp, telephone, ville, role]
+                'INSERT INTO users (prenom, nom, email, mdp, telephone, ville, role, idEntreprise) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                [prenom, nom, email, mdp, telephone, ville, role, idEntreprise]
             );
             return rows;
         } catch (err) {

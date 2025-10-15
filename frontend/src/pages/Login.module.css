@@ -235,6 +235,22 @@
     text-decoration: underline;
 }
 
+.recru {
+    font-size: 15px;
+    color: #64748b;
+    margin-top: 10px;
+    display: flex;
+    gap: 8px;
+}
+
+.recru input {
+    width: 16px;
+    height: 16px;
+    accent-color: #0f172a;
+    cursor: pointer;
+    margin-top: 2px;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .loginContainer {
