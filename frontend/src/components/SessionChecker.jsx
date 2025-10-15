@@ -20,12 +20,16 @@ const SessionChecker = ({ children }) => {
                 }
             }
             
-            // Si on est sur une page publique, ne pas vérifier la session
-            if (publicPages.includes(location.pathname)) {
+            // Vérifier si on est sur une page publique
+            const isPublicPage = publicPages.includes(location.pathname) || 
+                                location.pathname.startsWith('/companie/') || 
+                                location.pathname.startsWith('/offer/');
+            
+            if (isPublicPage) {
                 return;
             }
 
-            // Pour les autres pages (comme /offer/:id, /companie/:idEntreprise), vérifier la session
+            // Pour les autres pages, vérifier la session
             const isValid = await verifySession();
             if (!isValid) {
                 // Si pas de session valide, rediriger vers login
