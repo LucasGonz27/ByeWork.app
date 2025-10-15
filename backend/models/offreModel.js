@@ -18,6 +18,8 @@ class Offre {
             throw err;
         }
     }
+
+  
 }
 
 module.exports = Offre;
