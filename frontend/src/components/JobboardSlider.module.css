@@ -68,7 +68,8 @@
 .card h3 { font-size: 18px; margin: 10px 0 6px 0; }
 .company { font-size: 14px; color: #111; margin: 0 0 8px 0; }
 .meta { font-size: 13px; color: #4b5563; margin: 0 0 14px 0; }
-.cta { background: #111; color: #fff; border: none; padding: 10px 12px; font-size: 14px; cursor: pointer; }
+.cta { background-color:#111; color: #fff; border: none; padding: 10px 12px; font-size: 14px; cursor: pointer; }
+.cta .textCta { text-decoration: none; color: white}
 
 /* Removed viewport arrows; using only header controls */
 
