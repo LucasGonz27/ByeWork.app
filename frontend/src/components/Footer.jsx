@@ -19,7 +19,7 @@ import {
 function Footer() {
     const location = useLocation();
     // Ne pas afficher le footer sur la page de login
-    if (location.pathname === '/Login' || location.pathname === '/Signup') {
+    if (location.pathname === '/login' || location.pathname === '/Signup') {
         return null;
     }
 

@@ -9,6 +9,7 @@ import Companies from './pages/Companies';
 import Footer from './components/Footer';
 import PageProduct from './pages/Page_offre';
 import PageCompanie from './pages/Page_companie';
+import NotFound from './pages/NotFound';
 import SessionChecker from './components/SessionChecker';
 import NotificationContainer from './components/NotificationContainer';
 import { NotificationProvider, useNotificationContext } from './contexts/NotificationContext';
@@ -30,6 +31,7 @@ const AppContent = () => {
             <Route path="/SearchCompanies" element={<Companies />} />
             <Route path="/offer/:id" element={<PageProduct />} />
             <Route path="/companie/:idEntreprise" element={<PageCompanie />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
         <Footer />

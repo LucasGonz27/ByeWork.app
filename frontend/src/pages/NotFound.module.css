@@ -1,0 +1,42 @@
+.container {
+    min-height: 80vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    padding: 40px 50px;
+    text-align: center;
+}
+
+.title {
+    font-size: 4rem;
+    margin: 0;
+    color: #b24c4c;
+}
+
+.subtitle {
+    margin: 10px 0 24px 0;
+    color: #555;
+    font-size: 1.1rem;
+}
+
+.homeButton {
+    display: inline-block;
+    background: #111;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.homeButton:hover {
+    background: #686868;
+}
+
+
