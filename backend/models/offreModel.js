@@ -19,6 +19,18 @@ class Offre {
         }
     }
 
+    static async create(idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min , salaire_max , date_publi , experience_requise , niveau_etude, statut = 'publiée') {
+        try {
+            const [result] = await db.query(
+                'INSERT INTO offres (idEntreprise, titre, lieu, description, mission_offre, profil_recherch, description_poste, type_contrat, salaire_min, salaire_max, date_publi, experience_requise, niveau_etude, statut) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min , salaire_max , date_publi , experience_requise , niveau_etude, statut]
+            );
+            return { id: result.insertId, idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min , salaire_max , date_publi , experience_requise , niveau_etude, statut };
+        } catch (err) {
+            throw err;
+        }
+    }
+
   
 }
 
