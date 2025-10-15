@@ -17,8 +17,10 @@ function Header() {
     useEffect(() => {
         const checkSession = async () => {
             // Pages publiques où on ne vérifie pas la session
-            const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/SearchCompanies'];
+            const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/companie/:id', '/SearchCompanies'];
+
             
+
             // Si on est sur une page publique, vérifier seulement le localStorage
             if (publicPages.includes(location.pathname)) {
                 if (isLoggedIn()) {
@@ -101,7 +103,13 @@ function Header() {
                     <Link to="/profile" className={styles.userInfoLink}>
                         <div className={styles.userInfo}>
                             <span>Bonjour, {user.prenom}</span>
-                            <span className={styles.userRole}>({user.role})</span>
+                            {user.role === 'admin' ? (
+                                <span className={styles.userRole}>(Chef du site)</span>
+                            ) : user.role === 'recruteur' ? (
+                                <span className={styles.userRole}>(Recruteur)</span>
+                            ) : (
+                                <span className={styles.userRole}></span>
+                            )}
                         </div>
                     </Link>
                 ) : (
@@ -110,7 +118,7 @@ function Header() {
                     </div>
                 )}
                 <span className={styles.separator}>|</span>
-                <Link to="#" onClick={closeMenu}>Entreprises / publier une offre</Link>
+                <Link to="/publier-offre" onClick={closeMenu}>Entreprises / publier une offre</Link>
                 {user && (
                     <>
                         <span className={styles.separator}>|</span>

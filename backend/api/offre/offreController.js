@@ -44,6 +44,25 @@ class OffreController {
         }
     }
 
+    static async CreateOffre(req, res) {
+        const { idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min , salaire_max , date_publi , experience_requise , niveau_etude } = req.body;
+        try {
+            const newOffre = await Offre.create(idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min , salaire_max , date_publi , experience_requise , niveau_etude);
+            res.status(201).json({
+                success: true,
+                data: newOffre,
+                message: 'Offre créée avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la création de l\'offre',
+                error: error.message
+            });
+        }
+
+    }
+
 }
 
 module.exports = OffreController;

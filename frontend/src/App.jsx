@@ -13,6 +13,7 @@ import NotFound from './pages/NotFound';
 import SessionChecker from './components/SessionChecker';
 import NotificationContainer from './components/NotificationContainer';
 import { NotificationProvider, useNotificationContext } from './contexts/NotificationContext';
+import PublierOffre from './pages/Publier_offre';
 
 const AppContent = () => {
   const { notifications, removeNotification } = useNotificationContext();
@@ -30,6 +31,7 @@ const AppContent = () => {
             <Route path="/profile" element={<Profile />} />
             <Route path="/SearchCompanies" element={<Companies />} />
             <Route path="/offer/:id" element={<PageProduct />} />
+            <Route path="/publier-offre" element={<PublierOffre />} />
             <Route path="/companie/:idEntreprise" element={<PageCompanie />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
