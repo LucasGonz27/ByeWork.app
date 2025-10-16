@@ -24,12 +24,10 @@ function Postuler() {
     const idUtilisateur = getCurrentUser()?.idUtilisateur;
 
     const [loading, setLoading] = useState(false);
-    const [cvFile, setCvFile] = useState(null);
+
     const [message, setMessage] = useState('');
 
-    const handleFileChange = (e) => {
-        setCvFile(e.target.files[0] || null);
-    };
+ 
 
     const handleMessageChange = (e) => {
         setMessage(e.target.value);

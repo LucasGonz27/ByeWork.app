@@ -8,6 +8,7 @@ import { formatNombre } from "../utils/formatNombre";
 const OFFRES_PAR_PAGE = 8;
 
 export default function Offres() {
+  // Tous les states pour gérer les offres et les filtres
   const [offres, setOffres] = useState([]);
   const [filteredOffres, setFilteredOffres] = useState([]);
   const [typeContrat, setTypeContrat] = useState("");
@@ -22,6 +23,7 @@ export default function Offres() {
   const [nbOffres, setNbOffres] = useState(0);
   const [page, setPage] = useState(1);
 
+  // On va chercher les offres à l'ouverture de la page
   useEffect(() => {
     const fetchOffres = async () => {
       try {
@@ -42,9 +44,11 @@ export default function Offres() {
     fetchOffres();
   }, []);
 
+  // Filtrage des offres à chaque changement de filtre ou de recherche
   useEffect(() => {
     let filtreOffre = offres;
 
+    // Recherche textuelle sur plusieurs champs
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       filtreOffre = filtreOffre.filter((offre) => {
@@ -67,6 +71,7 @@ export default function Offres() {
       });
     }
 
+    // Tous les filtres classiques
     if (typeContrat)
       filtreOffre = filtreOffre.filter(
         (offre) => offre.type_contrat === typeContrat
@@ -95,6 +100,7 @@ export default function Offres() {
         (offre) => offre.experience_requise === experienceRequise
       );
 
+    // Filtres salaires
     if (salaireMin !== "") {
       const min = Number(salaireMin);
       if (!isNaN(min)) {
@@ -114,7 +120,7 @@ export default function Offres() {
     }
 
     setFilteredOffres(filtreOffre);
-    setPage(1); 
+    setPage(1); // On revient à la première page si on filtre
   }, [
     typeContrat,
     lieu,
@@ -128,12 +134,14 @@ export default function Offres() {
     offres,
   ]);
 
+  // Pagination tranquille
   const totalPages = Math.ceil(filteredOffres.length / OFFRES_PAR_PAGE);
   const paginatedOffres = filteredOffres.slice(
     (page - 1) * OFFRES_PAR_PAGE,
     page * OFFRES_PAR_PAGE
   );
 
+  // On récupère toutes les valeurs uniques pour les filtres
   const typesContrat = Array.from(new Set(offres.map((o) => o.type_contrat)));
   const lieux = Array.from(new Set(offres.map((o) => o.lieu)));
   const entreprises = Array.from(new Set(offres.map((o) => o.nomEntreprise)));
@@ -153,8 +161,10 @@ export default function Offres() {
 
   return (
     <div className={styles.container}>
+      {/* Titre stylé */}
       <h1 className={styles.title}>Trouve ton futur job</h1>
 
+      {/* Barre de recherche chill */}
       <div className={styles.searchBar}>
         <SearchBar
           onSearch={setSearchTerm}
@@ -162,7 +172,7 @@ export default function Offres() {
         />
       </div>
 
-      {/* Filtres */}
+      {/* Tous les filtres, easy */}
       <div className={styles.filters}>
         <select
           value={typeContrat}
@@ -269,14 +279,14 @@ export default function Offres() {
         </select>
       </div>
 
-      {/* Compteur */}
+      {/* Compteur d'offres, histoire de savoir où t'en es */}
       <div className={styles.count}>
         {searchTerm
           ? `${filteredOffres.length} offre${filteredOffres.length > 1 ? "s" : ""} trouvée${filteredOffres.length > 1 ? "s" : ""} pour "${searchTerm}"`
           : `${filteredOffres.length} offre${filteredOffres.length > 1 ? "s" : ""} à découvrir`}
       </div>
 
-      {/* Résultats de recherche */}
+      {/* Suggestions si t'as rien trouvé, pas de panique */}
       {filteredOffres.length === 0 && (
         <div>
           <p className={styles.suggestion}>Suggestion de recherche :</p>
@@ -288,7 +298,7 @@ export default function Offres() {
         </div>
       )}
 
-      {/* Liste des offres */}
+      {/* La liste des offres, le cœur du truc */}
       <ul className={styles.list}>
         {paginatedOffres.map((offre) => (
           <li key={offre.idOffre} className={styles.item}>
@@ -316,6 +326,7 @@ export default function Offres() {
                 {formatNombre(offre.salaire_max)}€
               </span>
 
+              {/* Les tags, pour faire stylé */}
               {offre.tags &&
                 offre.tags
                   .split(",")
@@ -345,7 +356,7 @@ export default function Offres() {
         ))}
       </ul>
 
-      {/* Pagination controls */}
+      {/* Pagination pour naviguer tranquille */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
           <button
