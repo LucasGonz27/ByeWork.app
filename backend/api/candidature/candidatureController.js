@@ -62,6 +62,53 @@ class CandidatureController {
         }
     }
 
+    static async DeleteCandidature(req, res) {
+        try {
+            const { id } = req.params;
+            const result = await Candidature.delete(id);
+            if (result.affectedRows === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Candidature non trouvée'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Candidature supprimée avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la suppression de la candidature',
+                error: error.message
+            });
+        }   
+    }
+
+    static async UpdateCandidature(req, res) {
+        try {
+            const { id } = req.params;   
+            const { idUtilisateur , idOffre, date, message } = req.body;
+            const update = await Candidature.update(id, idUtilisateur , idOffre, date, message);
+            if (!update) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Candidature non trouvée'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Candidature mise à jour avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la mise à jour de la candidature',
+                error: error.message
+            });
+        }
+    }
+
 }
 
 module.exports = CandidatureController;

@@ -29,7 +29,25 @@ class Candidature {
             throw err;
         }
     }
-    
+
+    static async delete(id) {
+        try {
+            const [rows] = await db.query('DELETE FROM candidature WHERE idCandidature = ?', [id]);
+            return rows;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async update(idCandidature, idUtilisateur , idOffre, date, message) {
+        try {
+            const [rows] = await db.query('UPDATE candidature SET idUtilisateur = ?, idOffre = ?, date = ?, message = ? WHERE idCandidature = ?',
+            [idUtilisateur , idOffre, date, message, idCandidature]);
+            return rows.affectedRows;
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = Candidature;
