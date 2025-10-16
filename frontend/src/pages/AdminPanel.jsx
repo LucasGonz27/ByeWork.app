@@ -212,6 +212,9 @@ function AdminPanel() {
                                     <th>CA (M€)</th>
                                     <th>Adresse</th>
                                     <th>Téléphone</th>
+                                    <th>Description</th>
+                                    <th>Avantages</th>
+                                    <th>Mot de passe</th>
                                     <th>Image</th>
                                     <th>Actions</th>
                                 </>
@@ -285,6 +288,27 @@ function AdminPanel() {
                                             }
                                         </td>
                                         <td>{item.telephone || 'N/A'}</td>
+                                        <td title={item.description}>
+                                            {item.description ? 
+                                                (item.description.length > 50 ? 
+                                                    item.description.substring(0, 50) + '...' : 
+                                                    item.description
+                                                ) : 'N/A'
+                                            }
+                                        </td>
+                                        <td title={item.avantages}>
+                                            {item.avantages ? 
+                                                (item.avantages.length > 50 ? 
+                                                    item.avantages.substring(0, 50) + '...' : 
+                                                    item.avantages
+                                                ) : 'N/A'
+                                            }
+                                        </td>
+                                        <td>
+                                            <span style={{fontSize: '12px', color: '#666'}}>
+                                                {item.mdp ? '••••••••' : 'N/A'}
+                                            </span>
+                                        </td>
                                         <td>
                                             {item.image ? (
                                                 <img 
@@ -322,7 +346,7 @@ function AdminPanel() {
                                     <tr key={item.idOffre}>
                                         <td>{item.idOffre}</td>
                                         <td>{item.titre}</td>
-                                        <td>{item.nom_entreprise || item.nom || 'Entreprise inconnue'}</td>
+                                        <td>{item.nomEntreprise || item.nom || 'Entreprise inconnue'}</td>
                                         <td>{item.lieu}</td>
                                         <td>{item.type_contrat}</td>
                                         <td>{item.salaire_min}€ - {item.salaire_max}€</td>
@@ -573,29 +597,6 @@ function AdminPanel() {
                                         placeholder={editingItem ? "Laisser vide pour ne pas changer" : "Mot de passe requis"}
                                     />
                                 </div>
-
-                                <div className={styles.formGroup}>
-                                    <label>Rue</label>
-                                    <input
-                                        type="text"
-                                        name="adr_rue"
-                                        value={formData.adr_rue || ''}
-                                        onChange={handleInputChange}
-                                        placeholder="Numéro et nom de rue"
-                                    />
-                                </div>
-                                
-                                <div className={styles.formGroup}>
-                                    <label>Code postal</label>
-                                    <input
-                                        type="text"
-                                        name="adr_postal"
-                                        value={formData.adr_postal || ''}
-                                        onChange={handleInputChange}
-                                        placeholder="Code postal"
-                                        maxLength="10"
-                                    />
-                                </div>
                             </>
                         )}
                         
@@ -609,6 +610,44 @@ function AdminPanel() {
                                         value={formData.titre || ''}
                                         onChange={handleInputChange}
                                         required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Description</label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description || ''}
+                                        onChange={handleInputChange}
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Mission</label>
+                                    <textarea
+                                        name="mission_offre"
+                                        value={formData.mission_offre || ''}
+                                        onChange={handleInputChange}
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Profil recherché *</label>
+                                    <textarea
+                                        name="profil_recherch"
+                                        value={formData.profil_recherch || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Description du poste *</label>
+                                    <textarea
+                                        name="description_poste"
+                                        value={formData.description_poste || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                        rows="3"
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
@@ -643,10 +682,10 @@ function AdminPanel() {
                                         value={formData.type_contrat || ''}
                                         onChange={handleInputChange}
                                     >
+                                        <option value="">Sélectionner un type</option>
                                         <option value="CDI">CDI</option>
                                         <option value="CDD">CDD</option>
-                                        <option value="Stage">Stage</option>
-                                        <option value="Freelance">Freelance</option>
+                                        <option value="Alternance">Alternance</option>
                                     </select>
                                 </div>
                                 <div className={styles.formGroup}>
@@ -668,6 +707,26 @@ function AdminPanel() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
+                                    <label>Expérience requise</label>
+                                    <input
+                                        type="text"
+                                        name="experience_requise"
+                                        value={formData.experience_requise || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="ex: 3 ans, Débutant"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Niveau d'étude</label>
+                                    <input
+                                        type="text"
+                                        name="niveau_etude"
+                                        value={formData.niveau_etude || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="ex: Bac+3, Bac+5"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
                                     <label>Statut</label>
                                     <select
                                         name="statut"
@@ -676,7 +735,7 @@ function AdminPanel() {
                                     >
                                         <option value="publiée">Publiée</option>
                                         <option value="fermée">Fermée</option>
-                                        <option value="brouillon">Brouillon</option>
+                                        <option value="expirée">Expirée</option>
                                     </select>
                                 </div>
                             </>
