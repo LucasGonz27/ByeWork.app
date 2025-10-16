@@ -55,11 +55,11 @@ export default function Companies() {
           company.telephone,
           company.email,
           company.site_web,
-          company.taille?.toString(),
-          company.chiffre_affaire?.toString(),
-          company.annee_fondation?.toString(),
+          company.taille.toString(),
+          company.chiffre_affaires.toString(),
+          company.annee_fondation.toString(),
           company.secteur_activite,
-          company.nombre_employes?.toString()
+          company.nombre_employes.toString()
         ];
         
         return fieldsToSearch.some(field => 

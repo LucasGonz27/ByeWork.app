@@ -11,7 +11,7 @@ export default function Offres() {
 
   const [offres, setOffres] = useState([]); // toutes les offres qu'on récupère
   const [filteredOffres, setFilteredOffres] = useState([]); // offres après filtre/recherche
-  const [filters, setFilters] = useState({ // tous les filtres dans un objet
+  const [filters, setFilters] = useState({ 
     typeContrat: "",
     lieu: "",
     entreprise: "",
@@ -32,20 +32,19 @@ export default function Offres() {
         const json = await fetcher.json();
         if (json.success) {
           setOffres(json.data); 
-     
         } else {
-          console.error("Erreur API:", json.message); // si y'a un problème
+          console.error("Erreur API:", json.message); 
         }
       } catch (error) {
-        console.error("Erreur fetch offres:", error); // si le fetch échoue
+        console.error("Erreur fetch offres:", error); 
       }
     };
     fetchOffres();
-  }, []); // [] = juste au premier render
+  }, []);
 
-  // Quand les filtres ou la recherche changent, on refait le filtrage
+  // quand je filtre ou cherche je mets a jour les offres
   useEffect(() => {
-    let result = offres; // on part de toutes les offres
+    let result = offres; 
 
     // filtrage par recherche texte
     if (searchTerm) {
@@ -63,7 +62,7 @@ export default function Offres() {
           offre.salaire_min?.toString(),
           offre.salaire_max?.toString(),
           offre.date_publi,
-        ].some((f) => f?.toString().toLowerCase().normalize("NFD").includes(term)) // si un champ contient le terme
+        ].some(() => f?.toString().toLowerCase().normalize("NFD").includes(term)) // si un champ contient le terme
       );
     }
 
@@ -88,7 +87,7 @@ export default function Offres() {
     });
 
     setFilteredOffres(result); // on met à jour les offres filtrées
-    setPage(1); // on retourne à la première page après filtrage
+    setPage(1); 
   }, [searchTerm, filters, offres]);
 
   // Pagination
