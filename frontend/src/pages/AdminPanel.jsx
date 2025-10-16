@@ -9,13 +9,11 @@ function AdminPanel() {
     const { showSuccess, showError } = useNotificationContext();
     const [activeTab, setActiveTab] = useState('users');
     const [loading, setLoading] = useState(false);
-    
-    // Data states
+
     const [users, setUsers] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [offers, setOffers] = useState([]);
-    
-    // Form states
+
     const [editingItem, setEditingItem] = useState(null);
     const [formData, setFormData] = useState({});
     const [showForm, setShowForm] = useState(false);
@@ -53,7 +51,10 @@ function AdminPanel() {
             
             if (usersData.success) setUsers(usersData.data);
             if (companiesData.success) setCompanies(companiesData.data);
-            if (offersData.success) setOffers(offersData.data);
+            if (offersData.success) {
+                console.log('Données offres reçues:', offersData.data);
+                setOffers(offersData.data);
+            }
         } catch (error) {
             console.error('Erreur lors du chargement des données:', error);
             showError('Erreur lors du chargement des données');
@@ -83,17 +84,18 @@ function AdminPanel() {
             let endpoint = '';
             switch (type) {
                 case 'user':
-                    endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/${id}`;
+                    endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/delete/${id}`;
                     break;
                 case 'company':
-                    endpoint = `http://localhost:5000/ApiByeWork/entreprises/${id}`;
+                    endpoint = `http://localhost:5000/ApiByeWork/entreprises/delete/${id}`;
                     break;
                 case 'offer':
-                    endpoint = `http://localhost:5000/ApiByeWork/offres/${id}`;
+                    endpoint = `http://localhost:5000/ApiByeWork/offres/delete/${id}`;
                     break;
             }
             
-            const response = await fetch(endpoint, { method: 'DELETE' });
+            const method = type === 'offer' ? 'POST' : 'DELETE';
+            const response = await fetch(endpoint, { method });
             const data = await response.json();
             
             if (data.success) {
@@ -118,25 +120,25 @@ function AdminPanel() {
                 method = 'PUT';
                 switch (editingItem.type) {
                     case 'user':
-                        endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/${editingItem.idUtilisateur}`;
+                        endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/update/${editingItem.idUtilisateur}`;
                         break;
                     case 'company':
-                        endpoint = `http://localhost:5000/ApiByeWork/entreprises/${editingItem.idEntreprise}`;
+                        endpoint = `http://localhost:5000/ApiByeWork/entreprises/update/${editingItem.idEntreprise}`;
                         break;
                     case 'offer':
-                        endpoint = `http://localhost:5000/ApiByeWork/offres/${editingItem.idOffre}`;
+                        endpoint = `http://localhost:5000/ApiByeWork/offres/update/${editingItem.idOffre}`;
                         break;
                 }
             } else {
                 switch (activeTab) {
                     case 'users':
-                        endpoint = 'http://localhost:5000/ApiByeWork/utilisateurs';
+                        endpoint = 'http://localhost:5000/ApiByeWork/utilisateurs/newUser';
                         break;
                     case 'companies':
-                        endpoint = 'http://localhost:5000/ApiByeWork/entreprises';
+                        endpoint = 'http://localhost:5000/ApiByeWork/entreprises/create';
                         break;
                     case 'offers':
-                        endpoint = 'http://localhost:5000/ApiByeWork/offres';
+                        endpoint = 'http://localhost:5000/ApiByeWork/offres/create';
                         break;
                 }
             }
@@ -203,9 +205,14 @@ function AdminPanel() {
                                 <>
                                     <th>ID</th>
                                     <th>Nom</th>
-                                    <th>Secteur</th>
+                                    <th>Email</th>
+                                    <th>Domaine</th>
                                     <th>Taille</th>
-                                    <th>Localisation</th>
+                                    <th>Année</th>
+                                    <th>CA (M€)</th>
+                                    <th>Adresse</th>
+                                    <th>Téléphone</th>
+                                    <th>Image</th>
                                     <th>Actions</th>
                                 </>
                             )}
@@ -256,13 +263,44 @@ function AdminPanel() {
                                     </tr>
                                 );
                             } else if (activeTab === 'companies') {
+                                const adresseComplete = [
+                                    item.adr_rue,
+                                    item.adr_ville,
+                                    item.adr_postal
+                                ].filter(Boolean).join(', ') || 'N/A';
+                                
                                 return (
                                     <tr key={item.idEntreprise}>
                                         <td>{item.idEntreprise}</td>
                                         <td>{item.nom}</td>
-                                        <td>{item.secteur}</td>
-                                        <td>{item.taille}</td>
-                                        <td>{item.localisation}</td>
+                                        <td>{item.email}</td>
+                                        <td>{item.domaine_activite}</td>
+                                        <td>{item.taille ? item.taille.toLocaleString() : 'N/A'}</td>
+                                        <td>{item.annee_fondation || 'N/A'}</td>
+                                        <td>{item.chiffre_affaire ? (item.chiffre_affaire / 1000000).toFixed(0) : 'N/A'}</td>
+                                        <td title={adresseComplete}>
+                                            {adresseComplete.length > 30 ? 
+                                                adresseComplete.substring(0, 30) + '...' : 
+                                                adresseComplete
+                                            }
+                                        </td>
+                                        <td>{item.telephone || 'N/A'}</td>
+                                        <td>
+                                            {item.image ? (
+                                                <img 
+                                                    src={item.image} 
+                                                    alt={item.nom}
+                                                    style={{width: '30px', height: '30px', objectFit: 'cover', borderRadius: '4px'}}
+                                                    onError={(e) => {
+                                                        e.target.style.display = 'none';
+                                                        e.target.nextSibling.style.display = 'inline';
+                                                    }}
+                                                />
+                                            ) : null}
+                                            <span style={{display: item.image ? 'none' : 'inline', fontSize: '12px', color: '#666'}}>
+                                                {item.image ? 'Image' : 'N/A'}
+                                            </span>
+                                        </td>
                                         <td>
                                             <button 
                                                 className={styles.editBtn}
@@ -284,7 +322,7 @@ function AdminPanel() {
                                     <tr key={item.idOffre}>
                                         <td>{item.idOffre}</td>
                                         <td>{item.titre}</td>
-                                        <td>{item.nom_entreprise}</td>
+                                        <td>{item.nom_entreprise || item.nom || 'Entreprise inconnue'}</td>
                                         <td>{item.lieu}</td>
                                         <td>{item.type_contrat}</td>
                                         <td>{item.salaire_min}€ - {item.salaire_max}€</td>
@@ -415,11 +453,21 @@ function AdminPanel() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Secteur</label>
+                                    <label>Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Domaine d'activité</label>
                                     <input
                                         type="text"
-                                        name="secteur"
-                                        value={formData.secteur || ''}
+                                        name="domaine_activite"
+                                        value={formData.domaine_activite || ''}
                                         onChange={handleInputChange}
                                     />
                                 </div>
@@ -433,12 +481,119 @@ function AdminPanel() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Localisation</label>
+                                    <label>Année de fondation</label>
+                                    <input
+                                        type="number"
+                                        name="annee_fondation"
+                                        value={formData.annee_fondation || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Chiffre d'affaires</label>
+                                    <input
+                                        type="number"
+                                        name="chiffre_affaire"
+                                        value={formData.chiffre_affaire || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Téléphone</label>
+                                    <input
+                                        type="tel"
+                                        name="telephone"
+                                        value={formData.telephone || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Adresse - Rue</label>
                                     <input
                                         type="text"
-                                        name="localisation"
-                                        value={formData.localisation || ''}
+                                        name="adr_rue"
+                                        value={formData.adr_rue || ''}
                                         onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Adresse - Ville</label>
+                                    <input
+                                        type="text"
+                                        name="adr_ville"
+                                        value={formData.adr_ville || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Adresse - Code postal</label>
+                                    <input
+                                        type="text"
+                                        name="adr_postal"
+                                        value={formData.adr_postal || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Description</label>
+                                    <textarea
+                                        name="description"
+                                        value={formData.description || ''}
+                                        onChange={handleInputChange}
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Avantages</label>
+                                    <textarea
+                                        name="avantages"
+                                        value={formData.avantages || ''}
+                                        onChange={handleInputChange}
+                                        rows="3"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Image URL</label>
+                                    <input
+                                        type="url"
+                                        name="image"
+                                        value={formData.image || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="https://example.com/image.png"
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Mot de passe</label>
+                                    <input
+                                        type="password"
+                                        name="mdp"
+                                        value={formData.mdp || ''}
+                                        onChange={handleInputChange}
+                                        required={!editingItem}
+                                        placeholder={editingItem ? "Laisser vide pour ne pas changer" : "Mot de passe requis"}
+                                    />
+                                </div>
+
+                                <div className={styles.formGroup}>
+                                    <label>Rue</label>
+                                    <input
+                                        type="text"
+                                        name="adr_rue"
+                                        value={formData.adr_rue || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="Numéro et nom de rue"
+                                    />
+                                </div>
+                                
+                                <div className={styles.formGroup}>
+                                    <label>Code postal</label>
+                                    <input
+                                        type="text"
+                                        name="adr_postal"
+                                        value={formData.adr_postal || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="Code postal"
+                                        maxLength="10"
                                     />
                                 </div>
                             </>
