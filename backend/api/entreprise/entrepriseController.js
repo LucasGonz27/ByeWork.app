@@ -61,6 +61,71 @@ class EntrepriseController {
             });
         }
     }
+
+    static async CreateEntreprise(req, res) {
+        const { nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone } = req.body;
+        try {
+            const newEntreprise = await Entreprise.create(nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone);
+            res.status(201).json({
+                success: true,
+                data: newEntreprise,
+                message: 'Entreprise créée avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la création de l\'entreprise',
+                error: error.message
+            });
+        }
+    }
+
+    static async DeleteEntreprise(req, res) {
+        const { id } = req.params;
+        try {
+            const deleted = await Entreprise.delete(id);
+            if (!deleted) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Entreprise non trouvée'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Entreprise supprimée avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la suppression de l\'entreprise',
+                error: error.message
+            });
+        }
+    }
+
+    static async UpdateEntreprise(req, res) {
+        const { id } = req.params;
+        const { nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone } = req.body;        
+        try {
+            const updated = await Entreprise.update(id, nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone);
+            if (!updated) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Entreprise non trouvée'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Entreprise mise à jour avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la mise à jour de l\'entreprise',
+                error: error.message
+            });
+        }
+    }
 }
 
 module.exports = EntrepriseController;

@@ -31,6 +31,35 @@ class Entreprise {
         }
     }
 
+    static async create(nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone) {
+        try {
+            const [result] = await db.query(
+                'INSERT INTO entreprise (nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                [nom, image, description, avantages, email, domaine_activite, chiffre_affaire, mdp, taille, annee_fondation, adr_rue, adr_ville, adr_postal, telephone]
+            );
+            return result.affectedRows;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async delete(id) {
+        try {
+            const [result] = await db.query('DELETE FROM entreprise WHERE idEntreprise = ?', [id]);
+            return result.affectedRows > 0;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    static async update(idEntreprise, nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone){
+        try {
+            const[result] = await db.query('UPDATE entreprise SET nom = ?, image = ?, description = ?, avantages = ?, email = ?, domaine_activite = ?, chiffre_affaire = ?, mdp = ?, taille = ?, annee_fondation = ?, adr_rue = ?, adr_ville = ?, adr_postal = ?, telephone = ? WHERE idEntreprise = ?', [nom, image,description,avantages,email,domaine_activite,chiffre_affaire,mdp,taille, annee_fondation,adr_rue,adr_ville,adr_postal,telephone, idEntreprise]);
+            return result.affectedRows; 
+        } catch (err) {
+            throw err;
+        }
+    }
 }
 
 module.exports = Entreprise;

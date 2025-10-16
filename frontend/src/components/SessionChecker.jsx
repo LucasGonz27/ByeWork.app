@@ -1,25 +1,39 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { verifySession } from '../utils/auth';
+import { verifySession, getCurrentUserRole } from '../utils/auth';
+import { useNotificationContext } from '../contexts/NotificationContext';
 
 const SessionChecker = ({ children }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { showSuccess, showError } = useNotificationContext();
 
     useEffect(() => {
         const checkSessionOnLoad = async () => {
             // Pages publiques qui ne nécessitent pas d'authentification
             const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/SearchCompanies'];
 
-            const pageRecruteur = ["/publier-offre"];
+            const pageRecruteur = "/publier-offre";
 
-            if (pageRecruteur.includes(location.pathname)) {
-                if (localStorage.getItem('role') !== 'recruteur' && localStorage.getItem('role') !== 'admin') {
-                    navigate('/login');
-                    return;
-                }
+            // Si la page nécessite un rôle recruteur ou admin, vérifier le rôle
+            if (location.pathname === (pageRecruteur)) {
+                const role = getCurrentUserRole();
+                if (role == 'recruteur' || role == 'admin') {
+                navigate(pageRecruteur);
             }
-            
+            else if (role == 'user') {
+                navigate('/');
+                console.log(navigate("/"));
+                showError("Vous n'avez pas accès à cette page.");
+            }
+            else {
+                navigate('/login');
+                showError("Vous devez être connecté en tant que recruteur pour accéder à cette page.");
+                return;
+            }
+
+            }
+
             // Vérifier si on est sur une page publique
             const isPublicPage = publicPages.includes(location.pathname) || 
                                 location.pathname.startsWith('/companie/') || 
