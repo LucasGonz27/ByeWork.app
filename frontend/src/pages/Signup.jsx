@@ -29,9 +29,9 @@ function Signup() {
                     const url = "http://localhost:5000/ApiByeWork/entreprises";
                     const fetcher = await fetch(url);
                     const json = await fetcher.json();
-                if (json.success) {
-                    setCompanies(json.data);
-                }
+                    if (json.success) {
+                        setCompanies(json.data);
+                    }
                 }
             } catch (err) {
                 console.error('Erreur lors du chargement des entreprises:', err);
@@ -45,7 +45,7 @@ function Signup() {
             setCompanies([]);
             setSelectedCompany('');
         }
-    }, [isRecruiter]);
+    }, [isRecruiter, showError]);
 
     const handleInputChange = (e) => {
         setFormData({
@@ -65,10 +65,18 @@ function Signup() {
         setSelectedCompany(e.target.value);
     };
 
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setLoading(true);
         setError('');
+
+        if (!passwordRegex.test(formData.password)) {
+            setError("Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial.");
+            return;
+        }
+
+        setLoading(true);
 
         try {
             const response = await fetch('http://localhost:5000/ApiByeWork/utilisateurs/newUser', {
@@ -214,6 +222,7 @@ function Signup() {
                                 type="button"
                                 onClick={togglePasswordVisibility}
                                 className={styles.eyeButton}
+                                tabIndex={-1}
                             >
                                 {showPassword ? <FiEyeOff/> : <FiEye/>}
                             </button>
