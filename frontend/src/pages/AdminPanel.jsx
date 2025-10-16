@@ -1,0 +1,605 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { isLoggedIn, getCurrentUser } from '../utils/auth';
+import { useNotificationContext } from '../contexts/NotificationContext';
+import styles from './AdminPanel.module.css';
+
+function AdminPanel() {
+    const navigate = useNavigate();
+    const { showSuccess, showError } = useNotificationContext();
+    const [activeTab, setActiveTab] = useState('users');
+    const [loading, setLoading] = useState(false);
+    
+    // Data states
+    const [users, setUsers] = useState([]);
+    const [companies, setCompanies] = useState([]);
+    const [offers, setOffers] = useState([]);
+    
+    // Form states
+    const [editingItem, setEditingItem] = useState(null);
+    const [formData, setFormData] = useState({});
+    const [showForm, setShowForm] = useState(false);
+
+    useEffect(() => {
+        if (!isLoggedIn()) {
+            navigate('/login');
+            return;
+        }
+        
+        const currentUser = getCurrentUser();
+        if (currentUser?.role !== 'admin') {
+            navigate('/');
+            showError('Accès refusé. Seuls les administrateurs peuvent accéder à cette page.');
+            return;
+        }
+        
+        loadData();
+    }, [navigate, showError]);
+
+    const loadData = async () => {
+        setLoading(true);
+        try {
+            const [usersRes, companiesRes, offersRes] = await Promise.all([
+                fetch('http://localhost:5000/ApiByeWork/utilisateurs/admin'),
+                fetch('http://localhost:5000/ApiByeWork/entreprises'),
+                fetch('http://localhost:5000/ApiByeWork/offres')
+            ]);
+            
+            const [usersData, companiesData, offersData] = await Promise.all([
+                usersRes.json(),
+                companiesRes.json(),
+                offersRes.json()
+            ]);
+            
+            if (usersData.success) setUsers(usersData.data);
+            if (companiesData.success) setCompanies(companiesData.data);
+            if (offersData.success) setOffers(offersData.data);
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+            showError('Erreur lors du chargement des données');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setFormData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleEdit = (item, type) => {
+        setEditingItem({ ...item, type });
+        setFormData(item);
+        setShowForm(true);
+    };
+
+    const handleDelete = async (id, type) => {
+        if (!window.confirm('Êtes-vous sûr de vouloir supprimer cet élément ?')) return;
+        
+        try {
+            let endpoint = '';
+            switch (type) {
+                case 'user':
+                    endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/${id}`;
+                    break;
+                case 'company':
+                    endpoint = `http://localhost:5000/ApiByeWork/entreprises/${id}`;
+                    break;
+                case 'offer':
+                    endpoint = `http://localhost:5000/ApiByeWork/offres/${id}`;
+                    break;
+            }
+            
+            const response = await fetch(endpoint, { method: 'DELETE' });
+            const data = await response.json();
+            
+            if (data.success) {
+                showSuccess('Élément supprimé avec succès');
+                loadData();
+            } else {
+                showError('Erreur lors de la suppression');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            showError('Erreur lors de la suppression');
+        }
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            let endpoint = '';
+            let method = 'POST';
+            
+            if (editingItem) {
+                method = 'PUT';
+                switch (editingItem.type) {
+                    case 'user':
+                        endpoint = `http://localhost:5000/ApiByeWork/utilisateurs/${editingItem.idUtilisateur}`;
+                        break;
+                    case 'company':
+                        endpoint = `http://localhost:5000/ApiByeWork/entreprises/${editingItem.idEntreprise}`;
+                        break;
+                    case 'offer':
+                        endpoint = `http://localhost:5000/ApiByeWork/offres/${editingItem.idOffre}`;
+                        break;
+                }
+            } else {
+                switch (activeTab) {
+                    case 'users':
+                        endpoint = 'http://localhost:5000/ApiByeWork/utilisateurs';
+                        break;
+                    case 'companies':
+                        endpoint = 'http://localhost:5000/ApiByeWork/entreprises';
+                        break;
+                    case 'offers':
+                        endpoint = 'http://localhost:5000/ApiByeWork/offres';
+                        break;
+                }
+            }
+            
+            const response = await fetch(endpoint, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                showSuccess(editingItem ? 'Élément modifié avec succès' : 'Élément créé avec succès');
+                setShowForm(false);
+                setEditingItem(null);
+                setFormData({});
+                loadData();
+            } else {
+                showError(data.message || 'Erreur lors de l\'opération');
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+            showError('Erreur lors de l\'opération');
+        }
+    };
+
+    const renderTable = () => {
+        let data = [];
+        if (activeTab === 'users') {
+            data = users;
+        } else if (activeTab === 'companies') {
+            data = companies;
+        } else if (activeTab === 'offers') {
+            data = offers;
+        }
+        
+        if (loading) {
+            return <div className={styles.loading}>Chargement...</div>;
+        }
+        
+        if (data.length === 0) {
+            return <div className={styles.empty}>Aucun élément trouvé</div>;
+        }
+        
+        return (
+            <div className={styles.tableContainer}>
+                <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            {activeTab === 'users' && (
+                                <>
+                                    <th>ID</th>
+                                    <th>Prénom</th>
+                                    <th>Nom</th>
+                                    <th>Email</th>
+                                    <th>Téléphone</th>
+                                    <th>Ville</th>
+                                    <th>Rôle</th>
+                                    <th>Actions</th>
+                                </>
+                            )}
+                            {activeTab === 'companies' && (
+                                <>
+                                    <th>ID</th>
+                                    <th>Nom</th>
+                                    <th>Secteur</th>
+                                    <th>Taille</th>
+                                    <th>Localisation</th>
+                                    <th>Actions</th>
+                                </>
+                            )}
+                            {activeTab === 'offers' && (
+                                <>
+                                    <th>ID</th>
+                                    <th>Titre</th>
+                                    <th>Entreprise</th>
+                                    <th>Lieu</th>
+                                    <th>Type</th>
+                                    <th>Salaire</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </>
+                            )}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {data.map((item) => {
+                            if (activeTab === 'users') {
+                                return (
+                                    <tr key={item.idUtilisateur}>
+                                        <td>{item.idUtilisateur}</td>
+                                        <td>{item.prenom}</td>
+                                        <td>{item.nom}</td>
+                                        <td>{item.email}</td>
+                                        <td>{item.telephone}</td>
+                                        <td>{item.ville}</td>
+                                        <td>
+                                            <span className={`${styles.badge} ${styles[item.role]}`}>
+                                                {item.role}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className={styles.editBtn}
+                                                onClick={() => handleEdit(item, 'user')}
+                                            >
+                                                Modifier
+                                            </button>
+                                            <button 
+                                                className={styles.deleteBtn}
+                                                onClick={() => handleDelete(item.idUtilisateur, 'user')}
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            } else if (activeTab === 'companies') {
+                                return (
+                                    <tr key={item.idEntreprise}>
+                                        <td>{item.idEntreprise}</td>
+                                        <td>{item.nom}</td>
+                                        <td>{item.secteur}</td>
+                                        <td>{item.taille}</td>
+                                        <td>{item.localisation}</td>
+                                        <td>
+                                            <button 
+                                                className={styles.editBtn}
+                                                onClick={() => handleEdit(item, 'company')}
+                                            >
+                                                Modifier
+                                            </button>
+                                            <button 
+                                                className={styles.deleteBtn}
+                                                onClick={() => handleDelete(item.idEntreprise, 'company')}
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            } else if (activeTab === 'offers') {
+                                return (
+                                    <tr key={item.idOffre}>
+                                        <td>{item.idOffre}</td>
+                                        <td>{item.titre}</td>
+                                        <td>{item.nom_entreprise}</td>
+                                        <td>{item.lieu}</td>
+                                        <td>{item.type_contrat}</td>
+                                        <td>{item.salaire_min}€ - {item.salaire_max}€</td>
+                                        <td>
+                                            <span className={`${styles.badge} ${styles[item.statut]}`}>
+                                                {item.statut}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className={styles.editBtn}
+                                                onClick={() => handleEdit(item, 'offer')}
+                                            >
+                                                Modifier
+                                            </button>
+                                            <button 
+                                                className={styles.deleteBtn}
+                                                onClick={() => handleDelete(item.idOffre, 'offer')}
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            }
+                            return null;
+                        })}
+                    </tbody>
+                </table>
+            </div>
+        );
+    };
+
+    const renderForm = () => {
+        if (!showForm) return null;
+        
+        return (
+            <div className={styles.formOverlay}>
+                <div className={styles.formContainer}>
+                    <h3>{editingItem ? 'Modifier' : 'Créer'} {activeTab === 'users' ? 'utilisateur' : activeTab === 'companies' ? 'entreprise' : 'offre'}</h3>
+                    
+                    <form onSubmit={handleSubmit}>
+                        {activeTab === 'users' && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>Prénom</label>
+                                    <input
+                                        type="text"
+                                        name="prenom"
+                                        value={formData.prenom || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Nom</label>
+                                    <input
+                                        type="text"
+                                        name="nom"
+                                        value={formData.nom || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Email</label>
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        value={formData.email || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Mot de passe</label>
+                                    <input
+                                        type="password"
+                                        name="mdp"
+                                        value={formData.mdp || ''}
+                                        onChange={handleInputChange}
+                                        required={!editingItem}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Téléphone</label>
+                                    <input
+                                        type="tel"
+                                        name="telephone"
+                                        value={formData.telephone || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Ville</label>
+                                    <input
+                                        type="text"
+                                        name="ville"
+                                        value={formData.ville || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Rôle</label>
+                                    <select
+                                        name="role"
+                                        value={formData.role || 'user'}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="user">Utilisateur</option>
+                                        <option value="recruteur">Recruteur</option>
+                                        <option value="admin">Admin</option>
+                                    </select>
+                                </div>
+                            </>
+                        )}
+                        
+                        {activeTab === 'companies' && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>Nom</label>
+                                    <input
+                                        type="text"
+                                        name="nom"
+                                        value={formData.nom || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Secteur</label>
+                                    <input
+                                        type="text"
+                                        name="secteur"
+                                        value={formData.secteur || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Taille</label>
+                                    <input
+                                        type="text"
+                                        name="taille"
+                                        value={formData.taille || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Localisation</label>
+                                    <input
+                                        type="text"
+                                        name="localisation"
+                                        value={formData.localisation || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                            </>
+                        )}
+                        
+                        {activeTab === 'offers' && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>Titre</label>
+                                    <input
+                                        type="text"
+                                        name="titre"
+                                        value={formData.titre || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Entreprise</label>
+                                    <select
+                                        name="idEntreprise"
+                                        value={formData.idEntreprise || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    >
+                                        <option value="">Sélectionner une entreprise</option>
+                                        {companies.map(company => (
+                                            <option key={company.idEntreprise} value={company.idEntreprise}>
+                                                {company.nom}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Lieu</label>
+                                    <input
+                                        type="text"
+                                        name="lieu"
+                                        value={formData.lieu || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Type de contrat</label>
+                                    <select
+                                        name="type_contrat"
+                                        value={formData.type_contrat || ''}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="CDI">CDI</option>
+                                        <option value="CDD">CDD</option>
+                                        <option value="Stage">Stage</option>
+                                        <option value="Freelance">Freelance</option>
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Salaire minimum</label>
+                                    <input
+                                        type="number"
+                                        name="salaire_min"
+                                        value={formData.salaire_min || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Salaire maximum</label>
+                                    <input
+                                        type="number"
+                                        name="salaire_max"
+                                        value={formData.salaire_max || ''}
+                                        onChange={handleInputChange}
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Statut</label>
+                                    <select
+                                        name="statut"
+                                        value={formData.statut || 'publiée'}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="publiée">Publiée</option>
+                                        <option value="fermée">Fermée</option>
+                                        <option value="brouillon">Brouillon</option>
+                                    </select>
+                                </div>
+                            </>
+                        )}
+                        
+                        <div className={styles.formActions}>
+                            <button type="submit" className={styles.saveBtn}>
+                                {editingItem ? 'Modifier' : 'Créer'}
+                            </button>
+                            <button 
+                                type="button" 
+                                className={styles.cancelBtn}
+                                onClick={() => {
+                                    setShowForm(false);
+                                    setEditingItem(null);
+                                    setFormData({});
+                                }}
+                            >
+                                Annuler
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    };
+
+    return (
+        <div className={styles.adminContainer}>
+            <div className={styles.adminCard}>
+                <h1 className={styles.title}>Panneau d'Administration</h1>
+                <p className={styles.subtitle}>Gérez les utilisateurs, entreprises et offres d'emploi</p>
+                
+                <div className={styles.tabs}>
+                    <button 
+                        className={`${styles.tab} ${activeTab === 'users' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('users')}
+                    >
+                        Utilisateurs ({users.length})
+                    </button>
+                    <button 
+                        className={`${styles.tab} ${activeTab === 'companies' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('companies')}
+                    >
+                        Entreprises ({companies.length})
+                    </button>
+                    <button 
+                        className={`${styles.tab} ${activeTab === 'offers' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('offers')}
+                    >
+                        Offres ({offers.length})
+                    </button>
+                </div>
+                
+                <div className={styles.actions}>
+                    <button 
+                        className={styles.addBtn}
+                        onClick={() => {
+                            setEditingItem(null);
+                            setFormData({});
+                            setShowForm(true);
+                        }}
+                    >
+                        Ajouter {activeTab === 'users' ? 'un utilisateur' : activeTab === 'companies' ? 'une entreprise' : 'une offre'}
+                    </button>
+                    <button 
+                        className={styles.refreshBtn}
+                        onClick={loadData}
+                    >
+                        Actualiser
+                    </button>
+                </div>
+                
+                {renderTable()}
+                {renderForm()}
+            </div>
+        </div>
+    );
+}
+
+export default AdminPanel;

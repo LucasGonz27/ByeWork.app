@@ -92,7 +92,6 @@
 .completeButton:hover {
     background: #ff5252;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
 }
 
 .userInfo {
@@ -197,7 +196,7 @@
     color: white;
     border: none;
     padding: 15px 30px;
-    border-radius: 25px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;
@@ -208,7 +207,6 @@
 .saveButton:hover {
     background: #686868;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(78, 205, 196, 0.4);
 }
 
 .cancelButton {
@@ -216,7 +214,7 @@
     color: white;
     border: none;
     padding: 15px 30px;
-    border-radius: 25px;
+    border-radius: 10px;
     font-size: 1rem;
     font-weight: 600;
     cursor: pointer;

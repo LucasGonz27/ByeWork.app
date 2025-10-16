@@ -37,6 +37,16 @@ class Utilisateur {
         }
     }
 
+    // Récupérer tous les utilisateurs (tous rôles)
+    static async getAllUsers() {
+        try {
+            const [rows] = await db.query('SELECT * FROM users');
+            return rows;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     // Récupérer un utilisateur par email
     static async getByEmail(email) {
         try {

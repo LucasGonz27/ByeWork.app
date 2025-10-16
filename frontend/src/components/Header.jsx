@@ -1,5 +1,5 @@
-import {Link, useLocation, useNavigate} from 'react-router-dom';
-import {useState, useEffect} from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import styles from './Header.module.css';
 import Logo from '../assets/LogoByeWork.png';
 import { isLoggedIn, getCurrentUser, logout, verifySession } from '../utils/auth';
@@ -12,16 +12,13 @@ function Header() {
     const [user, setUser] = useState(null);
     const location = useLocation();
 
-    const isLoginPage = location.pathname === '/login' || location.pathname === '/Signup';
+    const isLoginPage = location.pathname === '/login' || location.pathname === '/Signup' || location.pathname === '/admin';
 
     useEffect(() => {
         const checkSession = async () => {
             // Pages publiques où on ne vérifie pas la session
             const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/companie/:id', '/SearchCompanies'];
 
-            
-
-            // Si on est sur une page publique, vérifier seulement le localStorage
             if (publicPages.includes(location.pathname)) {
                 if (isLoggedIn()) {
                     setUser(getCurrentUser());
@@ -29,7 +26,6 @@ function Header() {
                 return;
             }
 
-            // Pour les autres pages, vérifier la session côté serveur
             if (isLoggedIn()) {
                 const isValid = await verifySession();
                 if (isValid) {
@@ -37,7 +33,7 @@ function Header() {
                 }
             }
         };
-        
+
         checkSession();
     }, [location]);
 
@@ -51,22 +47,18 @@ function Header() {
 
     const handleLogout = async () => {
         const userName = user?.prenom || 'Utilisateur';
-        
-        // Afficher la notification de succès immédiatement
+
         showSuccess(`Au revoir ${userName} ! Déconnexion réussie.`);
-        
-        // Attendre un peu pour que la notification s'affiche
+
         setTimeout(async () => {
             await logout();
             setUser(null);
             closeMenu();
-            
-            // Rediriger vers la page d'accueil
+
             navigate('/');
         }, 100);
     };
 
-    // Ne pas afficher le header sur la page de login
     if (isLoginPage) {
         return null;
     }
@@ -75,13 +67,12 @@ function Header() {
         <nav className={styles.header}>
             {/* Logo à gauche */}
             <Link to="/" className={styles.logo}>
-                <img src={Logo} alt="Logo ByeWork"/>
+                <img src={Logo} alt="Logo ByeWork" />
             </Link>
 
             {/* Overlay pour fermer le menu */}
             {isMenuOpen && <div className={styles.overlay} onClick={closeMenu}></div>}
 
-            {/* Bouton de fermeture (croix) qui renvoie à l'accueil */}
             {isMenuOpen && (
                 <Link
                     to="/"

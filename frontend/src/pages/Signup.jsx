@@ -65,10 +65,50 @@ function Signup() {
         setSelectedCompany(e.target.value);
     };
 
-    const handleSubmit = async (e) => {
+	const isValidFirstName = (value) => {
+		const pattern = /^[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,30}$/;
+		return pattern.test(value.trim());
+	};
+
+	const isValidEmail = (value) => {
+		const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+		return pattern.test(value.trim());
+	};
+
+	const isValidPassword = (value) => {
+		const pattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}$/;
+		return pattern.test(value);
+	};
+
+	const validateForm = () => {
+		const errors = [];
+		if (!isValidFirstName(formData.prenom)) {
+			errors.push("Le prénom doit faire 2-30 caractères (lettres, espaces, -, ').");
+		}
+		if (!isValidEmail(formData.email)) {
+			errors.push("Veuillez saisir un email valide.");
+		}
+		if (!isValidPassword(formData.password)) {
+			errors.push("Mot de passe: 8+ caractères avec majuscule, minuscule, chiffre et spécial.");
+		}
+		if (isRecruiter && !selectedCompany) {
+			errors.push("Veuillez sélectionner votre entreprise.");
+		}
+		return errors;
+	};
+
+	const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
+		setError('');
+
+		const validationErrors = validateForm();
+		if (validationErrors.length > 0) {
+			setLoading(false);
+			setError(validationErrors);
+			showError(validationErrors[0]);
+			return;
+		}
 
         try {
             const response = await fetch('http://localhost:5000/ApiByeWork/utilisateurs/newUser', {
@@ -149,11 +189,19 @@ function Signup() {
                 </div>
 
                 <form className={styles.form} onSubmit={handleSubmit}>
-                    {error && (
-                        <div className={styles.errorMessage}>
-                            {error}
-                        </div>
-                    )}
+                {error && (
+                    <div className={styles.errorMessage}>
+                        {Array.isArray(error) ? (
+                            <ul style={{margin: 0, paddingLeft: 18}}>
+                                {error.map((msg, idx) => (
+                                    <li key={idx}>{msg}</li>
+                                ))}
+                            </ul>
+                        ) : (
+                            error
+                        )}
+                    </div>
+                )}
                     
                     <div className={styles.inputGroup}>
                         <label htmlFor="prenom" className={styles.label}>
@@ -161,7 +209,7 @@ function Signup() {
                         </label>
                         <div className={styles.inputWrapper}>
                             <FiUser className={styles.inputIcon}/>
-                            <input
+					<input
                                 type="text"
                                 id="prenom"
                                 name="prenom"
@@ -170,6 +218,8 @@ function Signup() {
                                 placeholder="Votre prénom"
                                 className={styles.input}
                                 required
+						pattern="[A-Za-zÀ-ÖØ-öø-ÿ' -]{2,30}"
+						title="2-30 lettres, espaces, apostrophes ou tirets"
                             />
                         </div>
                     </div>
@@ -180,7 +230,7 @@ function Signup() {
                         </label>
                         <div className={styles.inputWrapper}>
                             <FiMail className={styles.inputIcon}/>
-                            <input
+					<input
                                 type="email"
                                 id="email"
                                 name="email"
@@ -189,6 +239,8 @@ function Signup() {
                                 placeholder="votre@email.com"
                                 className={styles.input}
                                 required
+						pattern="[^\s@]+@[^\s@]+\.[^\s@]{2,}"
+						title="Email valide requis"
                             />
                         </div>
                     </div>
@@ -199,7 +251,7 @@ function Signup() {
                         </label>
                         <div className={styles.inputWrapper}>
                             <FiLock className={styles.inputIcon}/>
-                            <input
+					<input
                                 type={showPassword ? "text" : "password"}
                                 id="password"
                                 name="password"
@@ -208,6 +260,8 @@ function Signup() {
                                 placeholder="Votre mot de passe"
                                 className={styles.input}
                                 required
+						pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{8,}"
+						title="8+ caractères avec majuscule, minuscule, chiffre et caractère spécial"
                             />
                         
                             <button
