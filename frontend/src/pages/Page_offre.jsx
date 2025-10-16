@@ -67,7 +67,9 @@ function PageOffre() {
                   ))}
             </div>
             <div className={styles.btn}>
+              <a href={`/postuler?offre=${id}`}>
               <button className={styles.primaryBtn}>Postuler</button>
+              </a>
               <button className={styles.secondaryBtn}>Sauvegarder</button>
             </div>
           </div>

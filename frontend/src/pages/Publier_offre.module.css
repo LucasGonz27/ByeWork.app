@@ -1,0 +1,224 @@
+.page { 
+  padding: 16px; 
+}
+
+.grid { 
+  display: grid; 
+  grid-template-columns: 2fr 1fr; 
+  gap: 24px; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+}
+
+.mainCol { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 16px; 
+}
+
+.card { 
+  background: #ffffff; 
+  border: 1px solid #e5e7eb; 
+  border-radius: 14px; 
+  padding: 20px; 
+}
+
+
+.sectionHeaderBar {
+  background: #f1f1f1;
+  border-top-left-radius: 14px;
+  border-top-right-radius: 14px;
+  margin: -20px -20px 20px -20px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sectionTiret {  
+  font-weight: 600; 
+}
+
+.sectionHeaderText { 
+  margin: 0; 
+  font-size: 25px; 
+  font-weight: 600; 
+}
+
+/* --- Formulaire --- */
+.form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+  margin-top: 8px;
+}
+
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.input,
+.textarea,
+select.input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #0f172a;
+  background: #ffffff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+}
+
+.textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.input:focus,
+.textarea:focus,
+select.input:focus {
+  outline: none;
+  border-color: #0f172a;
+  box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.08);
+}
+
+.button {
+  grid-column: 1 / -1;
+  background: #0f172a;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.button:hover {
+  background: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.18);
+}
+
+.button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* Affinage titre/texte dans la carte */
+.card h2 {
+  margin-top: 4px;
+  font-size: clamp(1.05rem, 0.8vw + 0.9rem, 1.25rem);
+  color: #475569;
+  font-weight: 500;
+}
+
+/* --- Responsive --- */
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr; /* pile les colonnes */
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 12px;
+  }
+  .form {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 16px;
+  }
+  .sectionHeaderBar {
+    padding: 12px 16px;
+    margin: -16px -16px 16px -16px;
+  }
+}
+
+/* --- Missions list --- */
+.missions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.missionInputRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.secondaryButton {
+  background: #f8fafc;
+  color: #0f172a;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.secondaryButton:hover {
+  background: #eef2f7;
+  border-color: #d6dbe3;
+}
+
+.missionList {
+  list-style: disc inside;
+  margin: 6px 0 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.missionItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.missionText {
+  flex: 1;
+  color: #0f172a;
+}
+
+.removeButton {
+  background: #fff1f2;
+  color: #be123c;
+  border: 1px solid #fecdd3;
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.removeButton:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+}

@@ -63,6 +63,53 @@ class OffreController {
 
     }
 
+    static async DeleteOffre(req, res) {
+        const { id } = req.params;
+        try {
+            const deleted = await Offre.delete(id);
+            if (!deleted) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Offre non trouvée'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Offre supprimée avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la suppression de l\'offre',
+                error: error.message
+            });
+        }
+    }
+
+    static async UpdateOffre(req, res) {
+        const { id } = req.params;
+        const { idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min ,salaire_max , date_publi , experience_requise , niveau_etude, statut} = req.body;
+        try {
+            const updated = await Offre.update(id, idEntreprise, titre , lieu ,description , mission_offre , profil_recherch , description_poste , type_contrat , salaire_min ,salaire_max , date_publi , experience_requise , niveau_etude, statut);
+            if (!updated) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Offre non trouvée ou pas de modifications'
+                });
+            }
+            res.status(200).json({
+                success: true,
+                message: 'Offre mise à jour avec succès'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: 'Erreur lors de la mise à jour de l\'offre',
+                error: error.message
+            });
+        }
+    }
+
 }
 
 module.exports = OffreController;
