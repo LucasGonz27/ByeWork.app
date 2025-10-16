@@ -1,58 +1,57 @@
 import { useEffect, useState } from "react";
-import styles from "./Offers.module.css";
-import SearchBar from "../components/SearchBar";
-import CompanyIcon from "../assets/corporate-icon.svg";
-import { Calendar, FileText, MapPin, Briefcase, Euro } from "lucide-react";
-import { formatNombre } from "../utils/formatNombre";
+import styles from "./Offers.module.css"; 
+import SearchBar from "../components/SearchBar"; 
+import CompanyIcon from "../assets/corporate-icon.svg"; 
+import { Calendar, FileText, MapPin, Briefcase, Euro } from "lucide-react"; 
+import { formatNombre } from "../utils/formatNombre"; 
 
-const OFFRES_PAR_PAGE = 8;
+const OFFRES_PAR_PAGE = 8; 
 
 export default function Offres() {
-  // Tous les states pour gérer les offres et les filtres
-  const [offres, setOffres] = useState([]);
-  const [filteredOffres, setFilteredOffres] = useState([]);
-  const [typeContrat, setTypeContrat] = useState("");
-  const [lieu, setLieu] = useState("");
-  const [entreprise, setEntreprise] = useState("");
-  const [niveauEtude, setNiveauEtude] = useState("");
-  const [domaineActivite, setDomaineActivite] = useState("");
-  const [experienceRequise, setExperienceRequise] = useState("");
-  const [salaireMin, setSalaireMin] = useState("");
-  const [salaireMax, setSalaireMax] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [nbOffres, setNbOffres] = useState(0);
-  const [page, setPage] = useState(1);
 
-  // On va chercher les offres à l'ouverture de la page
+  const [offres, setOffres] = useState([]); // toutes les offres qu'on récupère
+  const [filteredOffres, setFilteredOffres] = useState([]); // offres après filtre/recherche
+  const [filters, setFilters] = useState({ // tous les filtres dans un objet
+    typeContrat: "",
+    lieu: "",
+    entreprise: "",
+    niveauEtude: "",
+    domaineActivite: "",
+    experienceRequise: "",
+    salaireMin: "",
+    salaireMax: "",
+  });
+  const [searchTerm, setSearchTerm] = useState(""); // ce que je tape dans la barre de recherche
+  const [page, setPage] = useState(1); 
+
   useEffect(() => {
     const fetchOffres = async () => {
       try {
-        const url = "http://localhost:5000/ApiByeWork/offres";
+        const url = "http://localhost:5000/ApiByeWork/offres"; 
         const fetcher = await fetch(url);
         const json = await fetcher.json();
         if (json.success) {
-          setOffres(json.data);
-          setFilteredOffres(json.data);
-          setNbOffres(json.count);
+          setOffres(json.data); 
+     
         } else {
-          console.error("Erreur API:", json.message);
+          console.error("Erreur API:", json.message); // si y'a un problème
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des offres:", error);
+        console.error("Erreur fetch offres:", error); // si le fetch échoue
       }
     };
     fetchOffres();
-  }, []);
+  }, []); // [] = juste au premier render
 
-  // Filtrage des offres à chaque changement de filtre ou de recherche
+  // Quand les filtres ou la recherche changent, on refait le filtrage
   useEffect(() => {
-    let filtreOffre = offres;
+    let result = offres; // on part de toutes les offres
 
-    // Recherche textuelle sur plusieurs champs
+    // filtrage par recherche texte
     if (searchTerm) {
-      const searchLower = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      filtreOffre = filtreOffre.filter((offre) => {
-        const fieldsToSearch = [
+      const term = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // enlever accents
+      result = result.filter((offre) =>
+        [
           offre.titre,
           offre.nomEntreprise,
           offre.lieu,
@@ -63,230 +62,92 @@ export default function Offres() {
           offre.tags,
           offre.salaire_min?.toString(),
           offre.salaire_max?.toString(),
-          offre.date_publi
-        ];
-        return fieldsToSearch.some(field =>
-          field && field.toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(searchLower)
-        );
-      });
+          offre.date_publi,
+        ].some((f) => f?.toString().toLowerCase().normalize("NFD").includes(term)) // si un champ contient le terme
+      );
     }
 
-    // Tous les filtres classiques
-    if (typeContrat)
-      filtreOffre = filtreOffre.filter(
-        (offre) => offre.type_contrat === typeContrat
-      );
-
-    if (lieu)
-      filtreOffre = filtreOffre.filter((offre) => offre.lieu === lieu);
-
-    if (entreprise)
-      filtreOffre = filtreOffre.filter(
-        (offre) => offre.nomEntreprise === entreprise
-      );
-
-    if (niveauEtude)
-      filtreOffre = filtreOffre.filter(
-        (offre) => offre.niveau_etude === niveauEtude
-      );
-
-    if (domaineActivite)
-      filtreOffre = filtreOffre.filter(
-        (offre) => offre.domaineActivite === domaineActivite
-      );
-
-    if (experienceRequise)
-      filtreOffre = filtreOffre.filter(
-        (offre) => offre.experience_requise === experienceRequise
-      );
-
-    // Filtres salaires
-    if (salaireMin !== "") {
-      const min = Number(salaireMin);
-      if (!isNaN(min)) {
-        filtreOffre = filtreOffre.filter(
-          (offre) => Number(offre.salaire_min) >= min
-        );
+    // filtrage classique avec tous les filtres
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) { // si le filtre est actif
+        if (key === "salaireMin") result = result.filter(o => Number(o.salaire_min) >= Number(value)); // min salaire
+        else if (key === "salaireMax") result = result.filter(o => Number(o.salaire_max) <= Number(value)); // max salaire
+        else { 
+          // pour les autres filtres, on map le nom du filtre au champ de l'objet offre
+          const fieldMap = {
+            typeContrat: "type_contrat",
+            lieu: "lieu",
+            entreprise: "nomEntreprise",
+            niveauEtude: "niveau_etude",
+            domaineActivite: "domaineActivite",
+            experienceRequise: "experience_requise",
+          };
+          result = result.filter(o => o[fieldMap[key]] === value); // filtrage exact
+        }
       }
-    }
+    });
 
-    if (salaireMax !== "") {
-      const max = Number(salaireMax);
-      if (!isNaN(max)) {
-        filtreOffre = filtreOffre.filter(
-          (offre) => Number(offre.salaire_max) <= max
-        );
-      }
-    }
+    setFilteredOffres(result); // on met à jour les offres filtrées
+    setPage(1); // on retourne à la première page après filtrage
+  }, [searchTerm, filters, offres]);
 
-    setFilteredOffres(filtreOffre);
-    setPage(1); // On revient à la première page si on filtre
-  }, [
-    typeContrat,
-    lieu,
-    entreprise,
-    niveauEtude,
-    domaineActivite,
-    experienceRequise,
-    salaireMin,
-    salaireMax,
-    searchTerm,
-    offres,
-  ]);
-
-  // Pagination tranquille
-  const totalPages = Math.ceil(filteredOffres.length / OFFRES_PAR_PAGE);
-  const paginatedOffres = filteredOffres.slice(
-    (page - 1) * OFFRES_PAR_PAGE,
-    page * OFFRES_PAR_PAGE
-  );
+  // Pagination
+  const totalPages = Math.ceil(filteredOffres.length / OFFRES_PAR_PAGE); // combien de pages on a
+  const paginatedOffres = filteredOffres.slice((page - 1) * OFFRES_PAR_PAGE, page * OFFRES_PAR_PAGE); // offres de la page
 
   // On récupère toutes les valeurs uniques pour les filtres
-  const typesContrat = Array.from(new Set(offres.map((o) => o.type_contrat)));
-  const lieux = Array.from(new Set(offres.map((o) => o.lieu)));
-  const entreprises = Array.from(new Set(offres.map((o) => o.nomEntreprise)));
-  const niveauxEtude = Array.from(new Set(offres.map((o) => o.niveau_etude)));
-  const domainesActivite = Array.from(
-    new Set(offres.map((o) => o.domaineActivite))
-  );
-  const experiencesRequises = Array.from(
-    new Set(offres.map((o) => o.experience_requise))
-  );
-  const salairesMin = Array.from(
-    new Set(offres.map((o) => o.salaire_min))
-  ).sort((a, b) => a - b);
-  const salairesMax = Array.from(
-    new Set(offres.map((o) => o.salaire_max))
-  ).sort((a, b) => a - b);
+  const getUnique = (field) => Array.from(new Set(offres.map(o => o[field]))).sort(); // genre tous les lieux uniques
+  const typesContrat = getUnique("type_contrat");
+  const lieux = getUnique("lieu");
+  const entreprises = getUnique("nomEntreprise");
+  const niveauxEtude = getUnique("niveau_etude");
+  const domainesActivite = getUnique("domaineActivite");
+  const experiencesRequises = getUnique("experience_requise");
+  const salairesMin = getUnique("salaire_min");
+  const salairesMax = getUnique("salaire_max");
 
   return (
     <div className={styles.container}>
-      {/* Titre stylé */}
+      {/* titre */}
       <h1 className={styles.title}>Trouve ton futur job</h1>
 
-      {/* Barre de recherche chill */}
+      {/* barre de recherche */}
       <div className={styles.searchBar}>
-        <SearchBar
-          onSearch={setSearchTerm}
-          placeholder="Rechercher une offre..."
-        />
+        <SearchBar onSearch={setSearchTerm} placeholder="Rechercher une offre..." />
       </div>
 
-      {/* Tous les filtres, easy */}
+      {/* filtres */}
       <div className={styles.filters}>
-        <select
-          value={typeContrat}
-          onChange={(e) => setTypeContrat(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Tous les contrats</option>
-          {typesContrat.map((type) => (
-            <option key={type} value={type}>
-              {type}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={lieu}
-          onChange={(e) => setLieu(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Tous les lieux</option>
-          {lieux.map((lieu) => (
-            <option key={lieu} value={lieu}>
-              {lieu}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={entreprise}
-          onChange={(e) => setEntreprise(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Toutes les entreprises</option>
-          {entreprises.map((entreprise) => (
-            <option key={entreprise} value={entreprise}>
-              {entreprise}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={niveauEtude}
-          onChange={(e) => setNiveauEtude(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Tous les niveaux d'étude</option>
-          {niveauxEtude.map((niveau) => (
-            <option key={niveau} value={niveau}>
-              {niveau}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={domaineActivite}
-          onChange={(e) => setDomaineActivite(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Tous les domaines d'activité</option>
-          {domainesActivite.map((domaine) => (
-            <option key={domaine} value={domaine}>
-              {domaine}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={experienceRequise}
-          onChange={(e) => setExperienceRequise(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Toute expérience</option>
-          {experiencesRequises.map((exp) => (
-            <option key={exp} value={exp}>
-              {exp}
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={salaireMin}
-          onChange={(e) => setSalaireMin(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Salaire minimum</option>
-          {salairesMin.map((salaire) => (
-            <option key={salaire} value={salaire}>
-              {formatNombre(salaire)}€
-            </option>
-          ))}
-        </select>
-
-        <select
-          value={salaireMax}
-          onChange={(e) => setSalaireMax(e.target.value)}
-          className={styles.filterSelect}
-        >
-          <option value="">Salaire maximum</option>
-          {salairesMax.map((salaire) => (
-            <option key={salaire} value={salaire}>
-              {formatNombre(salaire)}€
-            </option>
-          ))}
-        </select>
+        {[ // on boucle sur tous les filtres pour générer les select
+          { value: filters.typeContrat, setter: "typeContrat", options: typesContrat, placeholder: "Tous les contrats" },
+          { value: filters.lieu, setter: "lieu", options: lieux, placeholder: "Tous les lieux" },
+          { value: filters.entreprise, setter: "entreprise", options: entreprises, placeholder: "Toutes les entreprises" },
+          { value: filters.niveauEtude, setter: "niveauEtude", options: niveauxEtude, placeholder: "Tous les niveaux d'étude" },
+          { value: filters.domaineActivite, setter: "domaineActivite", options: domainesActivite, placeholder: "Tous les domaines d'activité" },
+          { value: filters.experienceRequise, setter: "experienceRequise", options: experiencesRequises, placeholder: "Toute expérience" },
+          { value: filters.salaireMin, setter: "salaireMin", options: salairesMin, placeholder: "Salaire minimum" },
+          { value: filters.salaireMax, setter: "salaireMax", options: salairesMax, placeholder: "Salaire maximum" },
+        ].map(({ value, setter, options, placeholder }) => (
+          <select
+            key={setter}
+            value={value}
+            onChange={(e) => setFilters(prev => ({ ...prev, [setter]: e.target.value }))} // update filtre
+            className={styles.filterSelect}
+          >
+            <option value="">{placeholder}</option>
+            {options.map(opt => <option key={opt} value={opt}>{typeof opt === "number" ? formatNombre(opt) + "€" : opt}</option>)}
+          </select>
+        ))}
       </div>
 
-      {/* Compteur d'offres, histoire de savoir où t'en es */}
+      {/* compteur d'offres */}
       <div className={styles.count}>
         {searchTerm
           ? `${filteredOffres.length} offre${filteredOffres.length > 1 ? "s" : ""} trouvée${filteredOffres.length > 1 ? "s" : ""} pour "${searchTerm}"`
           : `${filteredOffres.length} offre${filteredOffres.length > 1 ? "s" : ""} à découvrir`}
       </div>
 
-      {/* Suggestions si t'as rien trouvé, pas de panique */}
+      {/* message si rien trouvé */}
       {filteredOffres.length === 0 && (
         <div>
           <p className={styles.suggestion}>Suggestion de recherche :</p>
@@ -298,90 +159,43 @@ export default function Offres() {
         </div>
       )}
 
-      {/* La liste des offres, le cœur du truc */}
+      {/* liste des offres */}
       <ul className={styles.list}>
-        {paginatedOffres.map((offre) => (
+        {paginatedOffres.map(offre => (
           <li key={offre.idOffre} className={styles.item}>
             <h2 className={styles.itemTitle}>{offre.titre}</h2>
             <div className={styles.compContainer}>
-              <img
-                src={CompanyIcon}
-                alt="Icône entreprise"
-                className={styles.compIcon}
-              />
+              <img src={CompanyIcon} alt="Icône entreprise" className={styles.compIcon} />
               <h3 className={styles.compName}>{offre.nomEntreprise}</h3>
             </div>
             <div className={styles.tags}>
-              <span className={styles.tag}>
-                <MapPin className={styles.icon} />
-                {offre.lieu}
-              </span>
-              <span className={styles.tag}>
-                <Briefcase className={styles.icon} />
-                {offre.type_contrat}
-              </span>
-              <span className={styles.tag}>
-                <Euro className={styles.icon} />
-                {formatNombre(offre.salaire_min)}€ -{" "}
-                {formatNombre(offre.salaire_max)}€
-              </span>
-
-              {/* Les tags, pour faire stylé */}
-              {offre.tags &&
-                offre.tags
-                  .split(",")
-                  .slice(0, 8)
-                  .map((t, i) => (
-                    <span key={i} className={styles.tag}>
-                      {t.trim()}
-                    </span>
-                  ))}
+              <span className={styles.tag}><MapPin className={styles.icon} />{offre.lieu}</span>
+              <span className={styles.tag}><Briefcase className={styles.icon} />{offre.type_contrat}</span>
+              <span className={styles.tag}><Euro className={styles.icon} />{formatNombre(offre.salaire_min)}€ - {formatNombre(offre.salaire_max)}€</span>
+              {offre.tags?.split(",").slice(0, 8).map((t, i) => <span key={i} className={styles.tag}>{t.trim()}</span>)}
             </div>
             <div className={styles.description}>
               <FileText className={styles.icon} />
               <p>{offre.description}</p>
             </div>
             <div className={styles.itemFooter}>
-              <p className={styles.date}>
-                <Calendar className={styles.inlineIcon} />{" "}
-                <strong>{offre.date_publi}</strong>
-              </p>
+              <p className={styles.date}><Calendar className={styles.inlineIcon} /> <strong>{offre.date_publi}</strong></p>
               <button className={styles.consultButton}>
-                <a href={`/offer/${offre.idOffre}`} className={styles.linkButton}>
-                  Consulter l'offre
-                </a>
+                <a href={`/offer/${offre.idOffre}`} className={styles.linkButton}>Consulter l'offre</a>
               </button>
             </div>
           </li>
         ))}
       </ul>
 
-      {/* Pagination pour naviguer tranquille */}
+      {/* pagination */}
       {totalPages > 1 && (
         <div className={styles.pagination}>
-          <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={page === 1}
-            className={styles.pageButton}
-          >
-            Précédent
-          </button>
+          <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className={styles.pageButton}>Précédent</button>
           {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i + 1}
-              onClick={() => setPage(i + 1)}
-              className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}
-            >
-              {i + 1}
-            </button>
+            <button key={i + 1} onClick={() => setPage(i + 1)} className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}>{i + 1}</button>
           ))}
-          <button
-            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-            disabled={page === totalPages}
-            className={styles.pageButton}
-          >
-            Suivant
-          </button>
+          <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className={styles.pageButton}>Suivant</button>
         </div>
       )}
     </div>
