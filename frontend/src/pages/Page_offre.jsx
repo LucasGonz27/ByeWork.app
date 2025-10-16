@@ -81,24 +81,18 @@ function PageOffre() {
               <h2 className={styles.sectionHeaderText}>Le poste</h2>
             </div>
             <div className={styles.detailsList}>
-              {offre.description_poste && (
-                <>
+            
                   <h2>Description du poste</h2>
                   <div className={styles.descriptionBlock}>{offre.description_poste}</div>
-                </>
-              )}
-              {offre.mission_offre && (
-                <>
+         
+             
                   <h2>Vos missions</h2>
                   <div className={styles.descriptionBlock}>{offre.mission_offre}</div>
-                </>
-              )}
-              {offre.profil_recherch && (
-                <>
+                
+          
                   <h2>Profil recherché</h2>
                   <div className={styles.descriptionBlock}>{offre.profil_recherch}</div>
-                </>
-              )}
+                
             </div>
           </div>
         </div>
@@ -148,12 +142,10 @@ function PageOffre() {
                     <p>{offre.descriptionEntreprise}</p>
                   </div>
 
-                   {offre.avantages && (
-                <>
+              
                   <h2>Vos avantages</h2>
                   <div className={styles.descriptionBlock}>{offre.avantages}</div>
-                </>
-              )}
+             
 
                 </div>
               </div>

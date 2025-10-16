@@ -28,12 +28,10 @@ function Login() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log('Form submitted with data:', formData); // Debug
         setLoading(true);
         setError('');
 
-        try {
-            console.log('Sending request to:', 'http://localhost:5000/ApiByeWork/utilisateurs/connexion');
+        try {;
             const response = await fetch('http://localhost:5000/ApiByeWork/utilisateurs/connexion', {
                 method: 'POST',
                 headers: {

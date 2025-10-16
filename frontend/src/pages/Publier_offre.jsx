@@ -15,7 +15,7 @@ function Publier_offre() {
         experience_requise: '',
         niveau_etude: ''
     });
-    const [missionDraft, setMissionDraft] = useState('');
+    const [missionDraft, setMission] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -48,7 +48,7 @@ function Publier_offre() {
         const trimmed = missionDraft.trim();
         if (!trimmed) return;
         setForm({ ...form, mission_offre: [...form.mission_offre, trimmed] });
-        setMissionDraft('');
+        setMission('');
     };
 
     const removeMission = (index) => {
@@ -82,7 +82,7 @@ function Publier_offre() {
                                     className={style.input}
                                     placeholder="Ajouter une mission..."
                                     value={missionDraft}
-                                    onChange={(e) => setMissionDraft(e.target.value)}
+                                    onChange={(e) => setMission(e.target.value)}
                                     onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addMission(); } }}
                                 />
                                 <button type="button" className={style.secondaryButton} onClick={addMission}>Ajouter</button>

@@ -40,7 +40,7 @@ export default function Companies() {
   useEffect(() => {
     let filtered = companies;
 
-    // Filtrage par recherche textuelle - TOUS les champs (sans accents)
+    // Filtrage par recherche textuelle
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       filtered = filtered.filter((company) => {
@@ -55,11 +55,11 @@ export default function Companies() {
           company.telephone,
           company.email,
           company.site_web,
-          company.taille?.toString(),
-          company.chiffre_affaire?.toString(),
-          company.annee_fondation?.toString(),
+          company.taille.toString(),
+          company.chiffre_affaires.toString(),
+          company.annee_fondation.toString(),
           company.secteur_activite,
-          company.nombre_employes?.toString()
+          company.nombre_employes.toString()
         ];
         
         return fieldsToSearch.some(field => 
