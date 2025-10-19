@@ -1,10 +1,9 @@
 .container {
   font-family: "Abril Fatface", serif;
-  max-width: 100%;
-  margin-left: 0;
-  margin-right: 0;
-  padding: 12px;
-  }
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
 
   body {
     background-color: #e9e9e9;
@@ -23,6 +22,7 @@
   font-weight: 800;
   font-style: italic;
   margin-bottom: 50px;
+  text-align: left;
 }
 
 .empty {
@@ -37,8 +37,10 @@
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   gap: 12px;
+  max-width: 960px;
+  margin: 0 auto;
 }
 
 .item {
@@ -51,6 +53,7 @@
   background-color: #ffffff;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
 }
 
 .item:hover {
@@ -134,6 +137,7 @@
 .compContainer {
   display: flex;
   align-items: center;
+  padding-bottom: 10px;
 }
 
 .compIcon {
@@ -171,24 +175,59 @@
 
 /* Responsive Design */
 @media (max-width: 768px) {
-
+  .container {
+    padding: 8px;
+  }
+  
   .list {
     grid-template-columns: 1fr; 
+    gap: 8px;
   }
+  
+  .item {
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  
+  .itemTitle {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+  }
+  
+  .compName {
+    font-size: 18px;
+  }
+  
+  .tags {
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  
+  .tag {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+  }
+  
+  .description p {
+    font-size: 0.9rem;
+  }
+  
   .itemFooter {
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
     align-items: stretch;
+    margin-top: 12px;
+    padding-top: 12px;
   }
   
   .consultButton {
-    align-self: flex-end;
+    align-self: stretch;
     padding: 10px 16px;
     font-size: 0.85rem;
   }
   
-  .itemTitle {
-    font-size: 1.5rem;
+  .date {
+    font-size: 13px;
   }
 }
 
@@ -250,14 +289,12 @@
 
 
 .filters{
-  margin: 16px 0 50px 0;
+  margin: 16px auto 50px auto;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 10px;
   width: 100%;
-  max-width: 960px; 
-  margin-left: auto;
-  margin-right: auto;
+  max-width: 960px;
 }
 
 .filterSelect{
@@ -361,5 +398,133 @@
 
 .pageButton:hover {
   background-color: #f0f0f0;
+}
+
+/* Layout simplifié */
+.split{
+  display: block;
+}
+
+.detailsCard{
+  margin-top: 15px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  backdrop-filter: blur(10px);
+}
+
+.emptyDetails{
+  color: #6b7280;
+  font-style: italic;
+}
+
+.loading{ 
+  color: #6b7280; 
+}
+
+.itemTitle{
+  font-family: "Playfair Display", serif;
+  font-weight: 700;
+  font-size: 32px;
+  margin: 0 0 20px 0;
+  color: #1e293b;
+  line-height: 1.2;
+  background: linear-gradient(135deg, #1e293b 0%, #3b82f6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.image{
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  margin-right: 12px;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.detailsSection{ 
+  margin-top: 12px; 
+}
+
+.descriptionBlock{
+  background: #fafafa;
+  border: 1px solid #f0f0f0;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 20px;
+}
+
+.detailsSection h3{
+  font-size: 25px;
+  color: #000000;
+  font-weight: 600;
+  
+}
+
+.detailsSection h4{
+  font-size: 25px;
+  color: #000000;
+  font-weight: 600;
+}
+
+.descriptionBlock ul {
+  margin: 0;
+  padding-left: 20px;
+  list-style-type: none;
+}
+
+.descriptionBlock li {
+  margin-bottom: 6px;
+  color: #000000;
+  font-size: 18px;
+}
+
+.detailsActions{
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.primaryBtn{
+  background-color: #111827;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+.secondaryBtn{
+  background: #f3f4f6;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 14px;
+  cursor: pointer;
+}
+
+/* Détails sous l'item cliqué */
+.item.selected {
+  border-color: #3b82f6;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.itemDetails {
+  margin-top: 16px;
+  padding: 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  display: block;
+}
+
+@media (max-width: 860px){
+  .rightCol{ 
+    display: none;
+  }
 }
 

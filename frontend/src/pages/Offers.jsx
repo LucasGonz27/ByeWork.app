@@ -23,6 +23,10 @@ export default function Offres() {
   });
   const [searchTerm, setSearchTerm] = useState(""); // ce que je tape dans la barre de recherche
   const [page, setPage] = useState(1); 
+  const [selectedId, setSelectedId] = useState(null);
+  const [selectedOffre, setSelectedOffre] = useState(null);
+  const [isLoadingSelected, setIsLoadingSelected] = useState(false);
+  const assets = import.meta.glob('../assets/*', { eager: true, query: '?url', import: 'default' });
 
   useEffect(() => {
     const fetchOffres = async () => {
@@ -41,6 +45,50 @@ export default function Offres() {
     };
     fetchOffres();
   }, []);
+
+  const handleSelectOffre = (id) => {
+    if (selectedId === id) {
+      // Si on clique sur le même item, on ferme les détails
+      setSelectedId(null);
+      setSelectedOffre(null);
+    } else {
+      // Sinon on ouvre les détails du nouvel item
+      setSelectedId(id);
+    }
+  };
+
+  useEffect(() => {
+    if (!selectedId) {
+      setSelectedOffre(null);
+      return;
+    }
+    let isCancelled = false;
+    const fetchOffreSelectionnee = async () => {
+      try {
+        setIsLoadingSelected(true);
+        const url = `http://localhost:5000/ApiByeWork/offres/id/${selectedId}`;
+        const fetcher = await fetch(url);
+        const json = await fetcher.json();
+        if (!isCancelled) {
+          if (json.success) {
+            setSelectedOffre(json.data);
+          } else {
+            console.error("Erreur API:", json.message);
+            setSelectedOffre(null);
+          }
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          console.error("Erreur lors de la récupération de l'offre:", error);
+          setSelectedOffre(null);
+        }
+      } finally {
+        if (!isCancelled) setIsLoadingSelected(false);
+      }
+    };
+    fetchOffreSelectionnee();
+    return () => { isCancelled = true; };
+  }, [selectedId]);
 
   // quand je filtre ou cherche je mets a jour les offres
   useEffect(() => {
@@ -62,7 +110,7 @@ export default function Offres() {
           offre.salaire_min?.toString(),
           offre.salaire_max?.toString(),
           offre.date_publi,
-        ].some(() => f?.toString().toLowerCase().normalize("NFD").includes(term)) // si un champ contient le terme
+        ].some((f) => (f ?? "").toString().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").includes(term))
       );
     }
 
@@ -158,45 +206,130 @@ export default function Offres() {
         </div>
       )}
 
-      {/* liste des offres */}
-      <ul className={styles.list}>
-        {paginatedOffres.map(offre => (
-          <li key={offre.idOffre} className={styles.item}>
-            <h2 className={styles.itemTitle}>{offre.titre}</h2>
-            <div className={styles.compContainer}>
-              <img src={CompanyIcon} alt="Icône entreprise" className={styles.compIcon} />
-              <h3 className={styles.compName}>{offre.nomEntreprise}</h3>
-            </div>
-            <div className={styles.tags}>
-              <span className={styles.tag}><MapPin className={styles.icon} />{offre.lieu}</span>
-              <span className={styles.tag}><Briefcase className={styles.icon} />{offre.type_contrat}</span>
-              <span className={styles.tag}><Euro className={styles.icon} />{formatNombre(offre.salaire_min)}€ - {formatNombre(offre.salaire_max)}€</span>
-              {offre.tags?.split(",").slice(0, 8).map((t, i) => <span key={i} className={styles.tag}>{t.trim()}</span>)}
-            </div>
-            <div className={styles.description}>
-              <FileText className={styles.icon} />
-              <p>{offre.description}</p>
-            </div>
-            <div className={styles.itemFooter}>
-              <p className={styles.date}><Calendar className={styles.inlineIcon} /> <strong>{offre.date_publi}</strong></p>
-              <button className={styles.consultButton}>
-                <a href={`/offer/${offre.idOffre}`} className={styles.linkButton}>Consulter l'offre</a>
-              </button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {/* split layout: liste à gauche, détails en dessous*/}
+      <div className={styles.split}>
+        <div className={styles.leftCol}>
+          {/* liste des offres */}
+          <ul className={styles.list}>
+            {paginatedOffres.map(offre => (
+              <li key={offre.idOffre} className={`${styles.item} ${selectedId === offre.idOffre ? styles.selected : ''}`}>
+                <h2 className={styles.itemTitle}>{offre.titre}</h2>
+                 <div className={styles.compContainer}>
+                 <img
+                src={assets[`../assets/${offre.image}`]}
+               
+              />
 
-      {/* pagination */}
-      {totalPages > 1 && (
-        <div className={styles.pagination}>
-          <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className={styles.pageButton}>Précédent</button>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button key={i + 1} onClick={() => setPage(i + 1)} className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}>{i + 1}</button>
-          ))}
-          <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className={styles.pageButton}>Suivant</button>
+                 </div>
+                <div className={styles.tags}>
+                  <span className={styles.tag}><MapPin className={styles.icon} />{offre.lieu}</span>
+                  <span className={styles.tag}><Briefcase className={styles.icon} />{offre.type_contrat}</span>
+                  <span className={styles.tag}>{formatNombre(offre.salaire_min)}€ - {formatNombre(offre.salaire_max)}€</span>
+                  {offre.tags?.split(",").slice(0, 8).map((t, i) => <span key={i} className={styles.tag}>{t.trim()}</span>)}
+                </div>
+                <div className={styles.description}>
+                  <FileText className={styles.icon} />
+                  <p>{offre.description}</p>
+                </div>
+                <div className={styles.itemFooter}>
+                  <p className={styles.date}><Calendar className={styles.inlineIcon} /> <strong>{offre.date_publi}</strong></p>
+                  <button className={styles.consultButton} onClick={() => handleSelectOffre(offre.idOffre)}>
+                    Voir les détails de l'offre
+                  </button>
+                </div>
+                
+                {/* Détails sous l'item sur mobile */}
+                {selectedId === offre.idOffre && selectedOffre && (
+                  <div className={styles.itemDetails}>
+                    <h3 className={styles.detailsTitle}></h3>
+                    <div className={styles.detailsSection}>
+                      <h4>Le poste</h4>
+                      <div className={styles.descriptionBlock}>{selectedOffre.description_poste || selectedOffre.description}</div>
+                    </div>
+                    <div className={styles.detailsSection}>
+                      <h4>Vos missions</h4>
+                      <div className={styles.descriptionBlock}>
+                        <ul>
+                          {selectedOffre.mission_offre?.split('\n').filter(mission => mission.trim()).map((mission, index) => (
+                            <li key={index}>{mission.trim()}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                    <div className={styles.detailsSection}>
+                      <h4>Profil recherché</h4>
+                      <div className={styles.descriptionBlock}>{selectedOffre.profil_recherch}</div>
+                    </div>
+                    <div className={styles.detailsActions}>
+                      <a href={`/postuler?offre=${selectedId}`}><button className={styles.primaryBtn}>Postuler</button></a>
+                      <button className={styles.secondaryBtn}>Sauvegarder</button>
+                    </div>
+                  </div>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          {/* pagination */}
+          {totalPages > 1 && (
+            <div className={styles.pagination}>
+              <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1} className={styles.pageButton}>Précédent</button>
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button key={i + 1} onClick={() => setPage(i + 1)} className={`${styles.pageButton} ${page === i + 1 ? styles.activePage : ""}`}>{i + 1}</button>
+              ))}
+              <button onClick={() => setPage(p => Math.min(totalPages, p + 1))} disabled={page === totalPages} className={styles.pageButton}>Suivant</button>
+            </div>
+          )}
         </div>
-      )}
+
+        <aside className={styles.rightCol}>
+          
+
+          {selectedId && (
+            <div className={styles.detailsCard}>
+              {isLoadingSelected && <div className={styles.loading}>Chargement...</div>}
+              {!isLoadingSelected && selectedOffre && (
+                <div className={styles.detailsBody}>
+                  <h2 className={styles.detailsTitle}>{selectedOffre.titre}</h2>
+                  <div className={styles.image}>
+                    <img src={"../src/assets/" + selectedOffre.image} alt="Icône entreprise" />
+                  </div>
+                 
+                  <div className={styles.tags}>
+                    <span className={styles.tag}><MapPin className={styles.icon} />{selectedOffre.lieu}</span>
+                    <span className={styles.tag}><Briefcase className={styles.icon} />{selectedOffre.type_contrat}</span>
+                    <span className={styles.tag}><Euro className={styles.icon} />{formatNombre(selectedOffre.salaire_min)}€ - {formatNombre(selectedOffre.salaire_max)}€</span>
+                    {selectedOffre.tags?.split(",").slice(0, 8).map((t, i) => <span key={i} className={styles.tag}>{t.trim()}</span>)}
+                    <div className={styles.detailsActions}>
+                    <a href={`/postuler?offre=${selectedId}`}><button className={styles.primaryBtn}>Postuler</button></a>
+                    <button className={styles.secondaryBtn}>Sauvegarder</button>
+                  </div>
+                  </div>
+                  <div className={styles.detailsSection}>
+                    <h3>Le poste</h3>
+                    <div className={styles.descriptionBlock}>{selectedOffre.description_poste || selectedOffre.description}</div>
+                  </div>
+                  <div className={styles.detailsSection}>
+                    <h3>Vos missions</h3>
+                    <div className={styles.descriptionBlock}>
+                      <ul>
+                        {selectedOffre.mission_offre?.split('\n').filter(mission => mission.trim()).map((mission, index) => (
+                          <li key={index}>{mission.trim()}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                  <div className={styles.detailsSection}>
+                    <h3>Profil recherché</h3>
+                    <div className={styles.descriptionBlock}>{selectedOffre.profil_recherch}</div>
+                  </div>
+                  
+                </div>
+              )}
+            </div>
+          )}
+        </aside>
+      </div>
     </div>
   );
 }
