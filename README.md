@@ -1,51 +1,51 @@
-# 🚀 ByeWork.app
+# ByeWork.app
 
 **Plateforme de recherche d'emploi moderne et intuitive**
 
 ByeWork.app est une application web full-stack qui connecte les candidats aux entreprises, offrant une expérience utilisateur fluide pour la recherche d'emploi et la gestion des offres.
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-### 👥 **Pour les Candidats**
-- 🔍 **Recherche d'emplois** : Filtrage avancé par mots-clés, localisation, type de contrat
-- 📋 **Gestion de profil** : Création et mise à jour du profil candidat
-- 📝 **Candidatures** : Postulation facile aux offres d'emploi
-- 🔔 **Notifications** : Système de notifications en temps réel
+### **Pour les Candidats**
+- **Recherche d'emplois** : Filtrage avancé par mots-clés, localisation, type de contrat
+- **Gestion de profil** : Création et mise à jour du profil candidat
+- **Candidatures** : Postulation facile aux offres d'emploi
+- **Notifications** : Système de notifications en temps réel
 
-### 🏢 **Pour les Entreprises**
-- 📊 **Tableau de bord** : Gestion des offres et candidatures
-- 📝 **Publication d'offres** : Création d'annonces détaillées
-- 👥 **Gestion des candidats** : Suivi des candidatures
-- 📈 **Statistiques** : Analytics des performances
+### **Pour les Entreprises**
+- **Tableau de bord** : Gestion des offres et candidatures
+- **Publication d'offres** : Création d'annonces détaillées
+- **Gestion des candidats** : Suivi des candidatures
+- **Statistiques** : Analytics des performances
 
-### 🔧 **Administration**
-- 🛡️ **Panel admin** : Gestion globale de la plateforme
-- 📊 **Modération** : Validation des contenus
-- 📈 **Analytics** : Statistiques détaillées
+### **Administration**
+- **Panel admin** : Gestion globale de la plateforme
+- **Modération** : Validation des contenus
+- **Analytics** : Statistiques détaillées
 
-## 🛠️ **Technologies**
+## **Technologies**
 
 ### **Frontend**
-- ⚛️ **React 18** - Interface utilisateur moderne
-- 🎨 **CSS Modules** - Styling modulaire et maintenable
-- 🚀 **Vite** - Build tool ultra-rapide
-- 🧭 **React Router** - Navigation côté client
-- 📱 **Responsive Design** - Compatible mobile/desktop
+- **React 18** - Interface utilisateur moderne
+- **CSS Modules** - Styling modulaire et maintenable
+- **Vite** - Build tool ultra-rapide
+- **React Router** - Navigation côté client
+- **Responsive Design** - Compatible mobile/desktop
 
 ### **Backend**
-- 🟢 **Node.js** - Runtime JavaScript
-- 🚀 **Express.js** - Framework web
-- 🗄️ **Base de données** - Stockage des données
-- 🔐 **JWT** - Authentification sécurisée
-- 🛡️ **Middleware** - Sécurité et validation
+- **Node.js** - Runtime JavaScript
+- **Express.js** - Framework web
+- **Base de données** - Stockage des données
+- **JWT** - Authentification sécurisée
+- **Middleware** - Sécurité et validation
 
 ### **Sécurité**
-- 🔒 **Authentification JWT** - Tokens sécurisés
-- 🛡️ **Rate Limiting** - Protection contre les abus
-- 🌐 **CORS** - Configuration sécurisée
-- 📝 **Logging** - Traçabilité des actions
+- **Authentification JWT** - Tokens sécurisés
+- **Rate Limiting** - Protection contre les abus
+- **CORS** - Configuration sécurisée
+- **Logging** - Traçabilité des actions
 
-## 🚀 **Installation**
+## **Installation**
 
 ### **Prérequis**
 - Node.js (v16 ou supérieur)
@@ -99,8 +99,8 @@ npm run dev
 ```
 
 L'application sera accessible sur :
-- 🌐 **Frontend** : http://localhost:5173
-- 🔧 **Backend** : http://localhost:5000
+- **Frontend** : http://localhost:5173
+- **Backend** : http://localhost:5000
 
 ## 📁 **Structure du projet**
 
@@ -151,13 +151,13 @@ ByeWork.app/
 
 
 ### **Pages principales**
-- 🏠 **Accueil** - Présentation de la plateforme
-- 🔍 **Recherche d'emplois** - Filtrage et recherche
-- 🏢 **Entreprises** - Annuaire des entreprises
-- 👤 **Profil** - Gestion du profil utilisateur
-- 📝 **Publier une offre** - Création d'annonces (entreprises)
+- **Accueil** - Présentation de la plateforme
+- **Recherche d'emplois** - Filtrage et recherche
+- **Entreprises** - Annuaire des entreprises
+- **Profil** - Gestion du profil utilisateur
+- **Publier une offre** - Création d'annonces (entreprises)
 
-## 🔒 **Sécurité**
+## **Sécurité**
 
 - **Authentification JWT** : Tokens sécurisés pour l'authentification
 - **Rate Limiting** : Protection contre les attaques par déni de service

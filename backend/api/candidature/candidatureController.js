@@ -46,7 +46,9 @@ class CandidatureController {
     static async CreateCandidature(req, res) {
         
         try {
-            const { idUtilisateur , idOffre, date, message } = req.body;
+            // Récupérer l'ID utilisateur depuis le token d'authentification
+            const idUtilisateur = req.user.id;
+            const { idOffre, date, message } = req.body;
             const newCandidature = await Candidature.create(idUtilisateur , idOffre, date, message);
             res.status(201).json({
                 success: true,

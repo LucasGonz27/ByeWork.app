@@ -35,11 +35,11 @@ const offreRoute = require('./api/offre/offreRoute');
 // Routes publiques
 server.use('/ApiByeWork/utilisateurs', usersRoute);
 server.use('/ApiByeWork/offres', offreRoute);
+server.use('/ApiByeWork/entreprises', entrepriseRoute);
 
 // Routes protégées (nécessitent une authentification)
 server.use('/ApiByeWork/admins', authMiddleware, adminRoute);
-server.use('/ApiByeWork/candidatures', authMiddleware, candidatureRoute);
-server.use('/ApiByeWork/entreprises', authMiddleware, entrepriseRoute);
+server.use('/ApiByeWork/candidatures', candidatureRoute);
 
 server.listen(port, () => {
     console.log("Serveur en ligne sur le port : " + port)
