@@ -12,7 +12,7 @@ import NotFound from './pages/NotFound';
 import SessionChecker from './components/SessionChecker';
 import NotificationContainer from './components/NotificationContainer';
 import { NotificationProvider, useNotificationContext } from './contexts/NotificationContext';
-import PublierOffre from './pages/Publier_offre';
+import Publier_offre from './pages/Publier_offre';
 import Postuler from './pages/Postuler';
 import AdminPanel from './pages/AdminPanel';
 
@@ -31,7 +31,7 @@ const AppContent = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/SearchCompanies" element={<Companies />} />
-            <Route path="/publier-offre" element={<PublierOffre />} />
+            <Route path="/publier-offre" element={<Publier_offre />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/companie/:idEntreprise" element={<PageCompanie />} />
             <Route path="/postuler" element={<Postuler />} />

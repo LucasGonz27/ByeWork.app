@@ -1,12 +1,20 @@
 import style from './Publier_offre.module.css';
 import React, { useState } from 'react';
+import { useNotificationContext } from '../contexts/NotificationContext';
+import { getCurrentUser } from '../utils/auth';
 
 function Publier_offre() {
+    const { showSuccess, showError } = useNotificationContext();
+    const [loading, setLoading] = useState(false);
+    
+    // Récupérer l'utilisateur connecté et son ID entreprise
+    const currentUser = getCurrentUser();
+    const idEntreprise = currentUser?.idEntreprise;
     const [form, setForm] = useState({
         titre: '',
         lieu: '',
         description: '',
-        mission_offre: [],
+        mission_offre: '',
         profil_recherch: '',
         description_poste: '',
         type_contrat: '',
@@ -15,45 +23,84 @@ function Publier_offre() {
         experience_requise: '',
         niveau_etude: ''
     });
-    const [missionDraft, setMission] = useState('');
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm({ ...form, [name]: value });
     }
-    
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Vérifier que l'utilisateur est connecté et a une entreprise
+        if (!currentUser) {
+            showError("Vous devez être connecté pour publier une offre");
+            return;
+        }
+        
+        if (!idEntreprise) {
+            showError("Vous devez être associé à une entreprise pour publier une offre");
+            return;
+        }
+        
+        // Validation des champs obligatoires
+        if (!form.titre.trim()) {
+            showError("Le titre de l'offre est obligatoire");
+            return;
+        }
+        if (!form.profil_recherch.trim()) {
+            showError("Le profil recherché est obligatoire");
+            return;
+        }
+        if (!form.description_poste.trim()) {
+            showError("La description du poste est obligatoire");
+            return;
+        }
+        
+        // Validation des salaires
+        if (form.salaire_min && form.salaire_max && parseFloat(form.salaire_min) > parseFloat(form.salaire_max)) {
+            showError("Le salaire minimum ne peut pas être supérieur au salaire maximum");
+            return;
+        }
+        
+        setLoading(true);
+        
         try {
             const response = await fetch('http://localhost:5000/ApiByeWork/offres/create', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ ...form })
+                body: JSON.stringify({ 
+                    ...form, 
+                    idEntreprise: idEntreprise 
+                })
             });
             const data = await response.json();
-            if (!response.ok) {
-                console.error('Erreur lors de la création de l\'offre:', data);
+            
+            if (!response.ok || !data?.success) {
+                showError(data?.message || "Erreur lors de la création de l'offre");
                 return;
             }
-     
-            setForm({ ...form, titre: '', lieu: '', description: '', mission_offre: [], profil_recherch: '', description_poste: '', type_contrat: '', salaire_min: '', salaire_max: '', experience_requise: '', niveau_etude: '' });
+
+            showSuccess('Offre publiée avec succès !');
+            setForm({
+                titre: '',
+                lieu: '',
+                description: '',
+                mission_offre: '',
+                profil_recherch: '',
+                description_poste: '',
+                type_contrat: '',
+                salaire_min: '',
+                salaire_max: '',
+                experience_requise: '',
+                niveau_etude: ''
+            });
         } catch (err) {
-            console.error('Erreur réseau:', err);
+            showError("Erreur réseau lors de la publication de l'offre");
+        } finally {
+            setLoading(false);
         }
-    };
-
-    const addMission = () => {
-        const trimmed = missionDraft.trim();
-        if (!trimmed) return;
-        setForm({ ...form, mission_offre: [...form.mission_offre, trimmed] });
-        setMission('');
-    };
-
-    const removeMission = (index) => {
-        const next = form.mission_offre.filter((_, i) => i !== index);
-        setForm({ ...form, mission_offre: next });
     };
 
     return (
@@ -64,7 +111,7 @@ function Publier_offre() {
                         <span className={style.sectionTiret}>→</span>
                         <h3 className={style.sectionHeaderText}>Publier une offre</h3>
                   </div>
-                   <h2>Remplissez le formulaire ci-dessous pour publier votre offre.</h2>
+                   
                      <form className={style.form} onSubmit={handleSubmit}>
                         <label className={style.label}>
                             Titre de l'offre:
@@ -76,27 +123,13 @@ function Publier_offre() {
                         </label>
                         <div className={style.missions}>
                             <label className={style.label}>Missions de l'offre</label>
-                            <div className={style.missionInputRow}>
-                                <input
-                                    type="text"
-                                    className={style.input}
-                                    placeholder="Ajouter une mission..."
-                                    value={missionDraft}
-                                    onChange={(e) => setMission(e.target.value)}
-                                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); addMission(); } }}
-                                />
-                                <button type="button" className={style.secondaryButton} onClick={addMission}>Ajouter</button>
-                            </div>
-                            {form.mission_offre.length > 0 && (
-                                <ul className={style.missionList}>
-                                    {form.mission_offre.map((m, idx) => (
-                                        <li key={idx} className={style.missionItem}>
-                                            <span className={style.missionText}>{m}</span>
-                                            <button type="button" className={style.removeButton} onClick={() => removeMission(idx)}>Retirer</button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
+                            <textarea
+                                name="mission_offre"
+                                className={style.textarea}
+                                placeholder="Écrivez les missions ici..."
+                                value={form.mission_offre}
+                                onChange={handleChange}
+                            />
                         </div>
                         <label className={style.label}>
                             Profil recherché:
@@ -135,7 +168,9 @@ function Publier_offre() {
                             Niveau d'étude:
                             <input type="text" name="niveau_etude" className={style.input} value={form.niveau_etude} onChange={handleChange} />
                         </label>
-                        <button className={style.button} type="submit">Publier l'offre</button>
+                        <button className={style.button} type="submit" disabled={loading}>
+                            {loading ? 'Publication...' : 'Publier l\'offre'}
+                        </button>
                     </form>
                 </div>
                {/* Informations sur l'entreprise */}
@@ -149,8 +184,7 @@ function Publier_offre() {
           </div>
         </aside>
       </div>
-    </div> 
-
+    </div>
     );
 }
 
