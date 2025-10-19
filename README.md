@@ -128,7 +128,7 @@ ByeWork.app/
 └── 📄 README.md
 ```
 
-## 🔧 **API Endpoints**
+## 🔧 **API**
 
 ### **Authentification**
 - `POST /ApiByeWork/utilisateurs/login` - Connexion
@@ -149,7 +149,6 @@ ByeWork.app/
 - `POST /ApiByeWork/candidatures` - Postuler à une offre
 - `GET /ApiByeWork/candidatures` - Mes candidatures
 
-## 🎨 **Interface utilisateur**
 
 ### **Pages principales**
 - 🏠 **Accueil** - Présentation de la plateforme
@@ -157,12 +156,6 @@ ByeWork.app/
 - 🏢 **Entreprises** - Annuaire des entreprises
 - 👤 **Profil** - Gestion du profil utilisateur
 - 📝 **Publier une offre** - Création d'annonces (entreprises)
-
-### **Design**
-- 🎨 **Interface moderne** - Design épuré et professionnel
-- 📱 **Responsive** - Adaptation mobile/tablette/desktop
-- ⚡ **Performance** - Chargement rapide et fluide
-- ♿ **Accessibilité** - Conforme aux standards WCAG
 
 ## 🔒 **Sécurité**
 
@@ -172,46 +165,9 @@ ByeWork.app/
 - **Validation** : Validation des données côté serveur
 - **Logging** : Traçabilité des actions utilisateur
 
-## 🚀 **Déploiement**
 
-### **Production**
-1. **Backend** : Déployer sur Heroku, Vercel ou AWS
-2. **Frontend** : Déployer sur Netlify, Vercel ou GitHub Pages
-3. **Base de données** : Configurer une base de données de production
-4. **Variables d'environnement** : Configurer les secrets de production
 
-### **Variables d'environnement requises**
-```env
-NODE_ENV=production
-JWT_SECRET=secret_production
-DB_HOST=production_host
-DB_USER=production_user
-DB_PASSWORD=production_password
-```
 
-## 🤝 **Contribution**
-
-1. **Fork** le projet
-2. **Créer** une branche feature (`git checkout -b feature/nouvelle-fonctionnalite`)
-3. **Commit** vos changements (`git commit -m 'Ajout nouvelle fonctionnalité'`)
-4. **Push** vers la branche (`git push origin feature/nouvelle-fonctionnalite`)
-5. **Ouvrir** une Pull Request
-
-## 📝 **Licence**
-
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
-
-## 👥 **Équipe**
-
-- **Développeur Full-Stack** - Lucas
-- **Designer UI/UX** - [Nom]
-- **DevOps** - [Nom]
-
-## 📞 **Support**
-
-- 📧 **Email** : support@byework.app
-- 🐛 **Issues** : [GitHub Issues](https://github.com/votre-username/ByeWork.app/issues)
-- 📖 **Documentation** : [Wiki du projet](https://github.com/votre-username/ByeWork.app/wiki)
 
 ---
 
