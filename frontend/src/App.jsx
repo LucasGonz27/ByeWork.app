@@ -7,7 +7,6 @@ import Profile from './pages/Profile';
 import Header from './components/Header';
 import Companies from './pages/Companies';
 import Footer from './components/Footer';
-import PageProduct from './pages/Page_offre';
 import PageCompanie from './pages/Page_companie';
 import NotFound from './pages/NotFound';
 import SessionChecker from './components/SessionChecker';
@@ -32,7 +31,6 @@ const AppContent = () => {
             <Route path="/login" element={<Login />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/SearchCompanies" element={<Companies />} />
-            <Route path="/offer/:id" element={<PageProduct />} />
             <Route path="/publier-offre" element={<PublierOffre />} />
             <Route path="/admin" element={<AdminPanel />} />
             <Route path="/companie/:idEntreprise" element={<PageCompanie />} />
