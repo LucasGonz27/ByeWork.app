@@ -13,10 +13,25 @@ function AdminPanel() {
     const [users, setUsers] = useState([]);
     const [companies, setCompanies] = useState([]);
     const [offers, setOffers] = useState([]);
+    const [candidatures, setCandidatures] = useState([]);
 
     const [editingItem, setEditingItem] = useState(null);
     const [formData, setFormData] = useState({});
     const [showForm, setShowForm] = useState(false);
+
+    // Fonction utilitaire pour obtenir les valeurs par défaut selon l'onglet actif
+    const getDefaultFormData = () => {
+        switch (activeTab) {
+            case 'users':
+                return { role: 'user' };
+            case 'offers':
+                return { statut: 'publiée' };
+            case 'candidatures':
+                return { statut: 'envoyée' };
+            default:
+                return {};
+        }
+    };
 
     useEffect(() => {
         if (!isLoggedIn()) {
@@ -32,21 +47,23 @@ function AdminPanel() {
         }
         
         loadData();
-    }, [navigate, showError]);
+    }, [navigate]);
 
     const loadData = async () => {
         setLoading(true);
         try {
-            const [usersRes, companiesRes, offersRes] = await Promise.all([
-                fetch('http://localhost:5000/ApiByeWork/utilisateurs/admin'),
-                fetch('http://localhost:5000/ApiByeWork/entreprises'),
-                fetch('http://localhost:5000/ApiByeWork/offres')
+            const [usersRes, companiesRes, offersRes, candidaturesRes] = await Promise.all([
+                fetch('http://localhost:5000/ApiByeWork/utilisateurs/admin', { credentials: 'include' }),
+                fetch('http://localhost:5000/ApiByeWork/entreprises', { credentials: 'include' }),
+                fetch('http://localhost:5000/ApiByeWork/offres', { credentials: 'include' }),
+                fetch('http://localhost:5000/ApiByeWork/candidatures', { credentials: 'include' })
             ]);
             
-            const [usersData, companiesData, offersData] = await Promise.all([
+            const [usersData, companiesData, offersData, candidaturesData] = await Promise.all([
                 usersRes.json(),
                 companiesRes.json(),
-                offersRes.json()
+                offersRes.json(),
+                candidaturesRes.json()
             ]);
             
             if (usersData.success) setUsers(usersData.data);
@@ -54,6 +71,10 @@ function AdminPanel() {
             if (offersData.success) {
                 console.log('Données offres reçues:', offersData.data);
                 setOffers(offersData.data);
+            }
+            if (candidaturesData.success) {
+                console.log('Données candidatures reçues:', candidaturesData.data);
+                setCandidatures(candidaturesData.data);
             }
         } catch (error) {
             console.error('Erreur lors du chargement des données:', error);
@@ -92,10 +113,13 @@ function AdminPanel() {
                 case 'offer':
                     endpoint = `http://localhost:5000/ApiByeWork/offres/delete/${id}`;
                     break;
+                case 'candidature':
+                    endpoint = `http://localhost:5000/ApiByeWork/candidatures/delete/${id}`;
+                    break;
             }
             
             const method = type === 'offer' ? 'POST' : 'DELETE';
-            const response = await fetch(endpoint, { method });
+            const response = await fetch(endpoint, { method, credentials: 'include' });
             const data = await response.json();
             
             if (data.success) {
@@ -128,6 +152,9 @@ function AdminPanel() {
                     case 'offer':
                         endpoint = `http://localhost:5000/ApiByeWork/offres/update/${editingItem.idOffre}`;
                         break;
+                    case 'candidature':
+                        endpoint = `http://localhost:5000/ApiByeWork/candidatures/update/${editingItem.idCandidature}`;
+                        break;
                 }
             } else {
                 switch (activeTab) {
@@ -140,12 +167,16 @@ function AdminPanel() {
                     case 'offers':
                         endpoint = 'http://localhost:5000/ApiByeWork/offres/create';
                         break;
+                    case 'candidatures':
+                        endpoint = 'http://localhost:5000/ApiByeWork/candidatures/create';
+                        break;
                 }
             }
             
             const response = await fetch(endpoint, {
                 method,
                 headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
                 body: JSON.stringify(formData)
             });
             
@@ -155,7 +186,7 @@ function AdminPanel() {
                 showSuccess(editingItem ? 'Élément modifié avec succès' : 'Élément créé avec succès');
                 setShowForm(false);
                 setEditingItem(null);
-                setFormData({});
+                setFormData(getDefaultFormData());
                 loadData();
             } else {
                 showError(data.message || 'Erreur lors de l\'opération');
@@ -174,6 +205,8 @@ function AdminPanel() {
             data = companies;
         } else if (activeTab === 'offers') {
             data = offers;
+        } else if (activeTab === 'candidatures') {
+            data = candidatures;
         }
         
         if (loading) {
@@ -227,6 +260,17 @@ function AdminPanel() {
                                     <th>Lieu</th>
                                     <th>Type</th>
                                     <th>Salaire</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </>
+                            )}
+                            {activeTab === 'candidatures' && (
+                                <>
+                                    <th>ID</th>
+                                    <th>Utilisateur</th>
+                                    <th>Offre</th>
+                                    <th>Date</th>
+                                    <th>Message</th>
                                     <th>Statut</th>
                                     <th>Actions</th>
                                 </>
@@ -371,6 +415,56 @@ function AdminPanel() {
                                         </td>
                                     </tr>
                                 );
+                            } else if (activeTab === 'candidatures') {
+                                // Trouver l'utilisateur et l'offre correspondants
+                                const user = users.find(u => u.idUtilisateur === item.idUtilisateur);
+                                const offer = offers.find(o => o.idOffre === item.idOffre);
+                                
+                                return (
+                                    <tr key={item.idCandidature}>
+                                        <td>{item.idCandidature}</td>
+                                        <td>
+                                            {user ? `${user.prenom} ${user.nom}` : `ID: ${item.idUtilisateur}`}
+                                            <br />
+                                            <small style={{color: '#666'}}>{user?.email || 'Email inconnu'}</small>
+                                        </td>
+                                        <td>
+                                            {offer ? offer.titre : `ID: ${item.idOffre}`}
+                                            <br />
+                                            <small style={{color: '#666'}}>
+                                                {offer ? (offer.nomEntreprise || offer.nom || 'Entreprise inconnue') : 'Offre inconnue'}
+                                            </small>
+                                        </td>
+                                        <td>{new Date(item.date).toLocaleDateString('fr-FR')}</td>
+                                        <td title={item.message}>
+                                            {item.message ? 
+                                                (item.message.length > 50 ? 
+                                                    item.message.substring(0, 50) + '...' : 
+                                                    item.message
+                                                ) : 'Aucun message'
+                                            }
+                                        </td>
+                                        <td>
+                                            <span className={`${styles.badge} ${styles[item.statut]}`}>
+                                                {item.statut}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button 
+                                                className={styles.editBtn}
+                                                onClick={() => handleEdit(item, 'candidature')}
+                                            >
+                                                Modifier
+                                            </button>
+                                            <button 
+                                                className={styles.deleteBtn}
+                                                onClick={() => handleDelete(item.idCandidature, 'candidature')}
+                                            >
+                                                Supprimer
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
                             }
                             return null;
                         })}
@@ -384,9 +478,32 @@ function AdminPanel() {
         if (!showForm) return null;
         
         return (
-            <div className={styles.formOverlay}>
+            <div 
+                className={styles.formOverlay}
+                onClick={(e) => {
+                    if (e.target === e.currentTarget) {
+                        setShowForm(false);
+                        setEditingItem(null);
+                        setFormData(getDefaultFormData());
+                    }
+                }}
+            >
                 <div className={styles.formContainer}>
-                    <h3>{editingItem ? 'Modifier' : 'Créer'} {activeTab === 'users' ? 'utilisateur' : activeTab === 'companies' ? 'entreprise' : 'offre'}</h3>
+                    <div className={styles.formHeader}>
+                        <h3>{editingItem ? 'Modifier' : 'Créer'} {activeTab === 'users' ? 'utilisateur' : activeTab === 'companies' ? 'entreprise' : activeTab === 'offers' ? 'offre' : 'candidature'}</h3>
+                        <button 
+                            type="button" 
+                            className={styles.closeBtn}
+                            onClick={() => {
+                                setShowForm(false);
+                                setEditingItem(null);
+                                setFormData(getDefaultFormData());
+                            }}
+                            title="Fermer"
+                        >
+                            ×
+                        </button>
+                    </div>
                     
                     <form onSubmit={handleSubmit}>
                         {activeTab === 'users' && (
@@ -577,13 +694,13 @@ function AdminPanel() {
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
-                                    <label>Image URL</label>
+                                    <label>Image (URL ou nom de fichier)</label>
                                     <input
-                                        type="url"
+                                        type="text"
                                         name="image"
                                         value={formData.image || ''}
                                         onChange={handleInputChange}
-                                        placeholder="https://example.com/image.png"
+                                        placeholder="https://example.com/image.png ou nom_fichier.png"
                                     />
                                 </div>
                                 <div className={styles.formGroup}>
@@ -741,6 +858,86 @@ function AdminPanel() {
                             </>
                         )}
                         
+                        {activeTab === 'candidatures' && (
+                            <>
+                                <div className={styles.formGroup}>
+                                    <label>Utilisateur</label>
+                                    <select
+                                        name="idUtilisateur"
+                                        value={formData.idUtilisateur || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    >
+                                        <option value="">Sélectionner un utilisateur</option>
+                                        {users.map(user => (
+                                            <option key={user.idUtilisateur} value={user.idUtilisateur}>
+                                                {user.prenom} {user.nom} ({user.email})
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Offre</label>
+                                    <select
+                                        name="idOffre"
+                                        value={formData.idOffre || ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    >
+                                        <option value="">Sélectionner une offre</option>
+                                        {offers.map(offer => (
+                                            <option key={offer.idOffre} value={offer.idOffre}>
+                                                {offer.titre} - {offer.nomEntreprise || offer.nom || 'Entreprise inconnue'}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Date</label>
+                                    <input
+                                        type="date"
+                                        name="date"
+                                        value={formData.date ? formData.date.split('T')[0] : ''}
+                                        onChange={handleInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Message</label>
+                                    <textarea
+                                        name="message"
+                                        value={formData.message || ''}
+                                        onChange={handleInputChange}
+                                        rows="4"
+                                        placeholder="Message du candidat..."
+                                    />
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>Statut</label>
+                                    <select
+                                        name="statut"
+                                        value={formData.statut || 'envoyée'}
+                                        onChange={handleInputChange}
+                                    >
+                                        <option value="envoyée">Envoyée</option>
+                                        <option value="en attente">En attente</option>
+                                        <option value="acceptée">Acceptée</option>
+                                        <option value="refusée">Refusée</option>
+                                    </select>
+                                </div>
+                                <div className={styles.formGroup}>
+                                    <label>URL CV</label>
+                                    <input
+                                        type="url"
+                                        name="CV_url"
+                                        value={formData.CV_url || ''}
+                                        onChange={handleInputChange}
+                                        placeholder="https://example.com/cv.pdf"
+                                    />
+                                </div>
+                            </>
+                        )}
+                        
                         <div className={styles.formActions}>
                             <button type="submit" className={styles.saveBtn}>
                                 {editingItem ? 'Modifier' : 'Créer'}
@@ -751,7 +948,7 @@ function AdminPanel() {
                                 onClick={() => {
                                     setShowForm(false);
                                     setEditingItem(null);
-                                    setFormData({});
+                                    setFormData(getDefaultFormData());
                                 }}
                             >
                                 Annuler
@@ -788,6 +985,12 @@ function AdminPanel() {
                     >
                         Offres ({offers.length})
                     </button>
+                    <button 
+                        className={`${styles.tab} ${activeTab === 'candidatures' ? styles.active : ''}`}
+                        onClick={() => setActiveTab('candidatures')}
+                    >
+                        Candidatures ({candidatures.length})
+                    </button>
                 </div>
                 
                 <div className={styles.actions}>
@@ -795,11 +998,12 @@ function AdminPanel() {
                         className={styles.addBtn}
                         onClick={() => {
                             setEditingItem(null);
-                            setFormData({});
+                            // Initialiser avec des valeurs par défaut selon l'onglet actif
+                            setFormData(getDefaultFormData());
                             setShowForm(true);
                         }}
                     >
-                        Ajouter {activeTab === 'users' ? 'un utilisateur' : activeTab === 'companies' ? 'une entreprise' : 'une offre'}
+                        Ajouter {activeTab === 'users' ? 'un utilisateur' : activeTab === 'companies' ? 'une entreprise' : activeTab === 'offers' ? 'une offre' : 'une candidature'}
                     </button>
                     <button 
                         className={styles.refreshBtn}

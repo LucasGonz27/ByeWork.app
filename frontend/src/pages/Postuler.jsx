@@ -40,7 +40,6 @@ function Postuler() {
         try {
            
             const donnee = {
-                idUtilisateur: Number(idUtilisateur),
                 idOffre: Number(idOffre),
                 date: new Date().toISOString().split('T')[0],
                 message: message || null,
