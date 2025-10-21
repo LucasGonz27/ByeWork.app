@@ -1,10 +1,10 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-  // Essayer d'abord de récupérer le token depuis les cookies
+  // go recuperer le token depuis les cookies
   let token = req.cookies.authToken;
   
-  // Si pas de cookie, essayer l'en-tête Authorization (pour compatibilité)
+  // Si le cookie pas la il est pas la, essayer l'en-tête Authorization
   if (!token) {
     token = req.header('Authorization')?.replace('Bearer ', '');
   }
@@ -20,7 +20,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'votre_cle_secrete_super_securisee');
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'clef_du_chef_super_secrete');
     console.log('Auth middleware - Token decoded successfully for user:', decoded.id);
     req.user = decoded;
     next();

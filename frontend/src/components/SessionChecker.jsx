@@ -14,6 +14,7 @@ const SessionChecker = ({ children }) => {
             const publicPages = ['/', '/login', '/Signup', '/SearchOffers', '/SearchCompanies'];
 
             const pageRecruteur = "/publier-offre";
+            const pageAdmin = "/admin";
 
             // Si la page nécessite un rôle recruteur ou admin, vérifier le rôle
             if (location.pathname === (pageRecruteur)) {
@@ -32,6 +33,20 @@ const SessionChecker = ({ children }) => {
                 return;
             }
 
+            }
+
+            // Si la page nécessite un rôle admin uniquement
+            if (location.pathname === pageAdmin) {
+                const role = getCurrentUserRole();
+                console.log('SessionChecker - Tentative d\'accès à /admin avec le rôle:', role);
+                if (role !== 'admin') {
+                    console.log(' SessionChecker - Accès refusé, redirection vers /');
+                    navigate('/');
+                    showError("Accès refusé. Seuls les administrateurs peuvent accéder à cette page.");
+                    return;
+                } else {
+                    console.log(' SessionChecker - Accès autorisé à /admin');
+                }
             }
 
             // Vérifier si on est sur une page publique

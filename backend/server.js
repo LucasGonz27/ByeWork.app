@@ -8,7 +8,7 @@ const authMiddleware = require('./middleware/auth');
 const corsMiddleware = require('./middleware/cors');
 const { generalLimiter } = require('./middleware/rateLimit');
 
-// Middleware CORS personnalisé
+// Middleware cors
 server.use(corsMiddleware);
 
 // Middleware pour parser le JSON et les cookies
@@ -36,10 +36,11 @@ const offreRoute = require('./api/offre/offreRoute');
 server.use('/ApiByeWork/utilisateurs', usersRoute);
 server.use('/ApiByeWork/offres', offreRoute);
 server.use('/ApiByeWork/entreprises', entrepriseRoute);
-
-// Routes protégées (nécessitent une authentification)
-server.use('/ApiByeWork/admins', authMiddleware, adminRoute);
 server.use('/ApiByeWork/candidatures', candidatureRoute);
+
+// Route du chef 
+server.use('/ApiByeWork/admins',  authMiddleware, adminRoute);
+
 
 server.listen(port, () => {
     console.log("Serveur en ligne sur le port : " + port)

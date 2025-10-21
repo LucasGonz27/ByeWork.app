@@ -39,12 +39,6 @@ function AdminPanel() {
             return;
         }
         
-        const currentUser = getCurrentUser();
-        if (currentUser?.role !== 'admin') {
-            navigate('/');
-            showError('Accès refusé. Seuls les administrateurs peuvent accéder à cette page.');
-            return;
-        }
         
         loadData();
     }, [navigate]);

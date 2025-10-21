@@ -1,8 +1,8 @@
 const Utilisateur = require('../../models/usersModel');
 const jwt = require('jsonwebtoken');
 
-// Clé secrète pour JWT (en production, utiliser une variable d'environnement)
-const JWT_SECRET = process.env.JWT_SECRET || 'votre_cle_secrete_super_securisee';
+// Clé secrete hyper secrete pour le token 
+const JWT_SECRET = process.env.JWT_SECRET || 'clef_du_chef_super_secrete';
 
 class UsersController {
 
@@ -139,7 +139,7 @@ class UsersController {
         }
     }
 
-    // Vérifier la session utilisateur
+    // verif la session utilisateur
     static async verifySession(req, res) {
         try {
             const token = req.cookies.authToken;
@@ -175,7 +175,7 @@ class UsersController {
         }
     }
 
-    // Déconnexion
+  
     static async logoutUser(req, res) {
         try {
             res.clearCookie('authToken', {
