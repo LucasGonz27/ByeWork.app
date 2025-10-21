@@ -2,7 +2,6 @@ const express = require('express');
 const port = process.env.PORT ||5000
 
 const server = express();
-const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authMiddleware = require('./middleware/auth');
 const corsMiddleware = require('./middleware/cors');
